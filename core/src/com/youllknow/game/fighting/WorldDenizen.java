@@ -1,6 +1,7 @@
 package com.youllknow.game.fighting;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -26,6 +27,7 @@ public class WorldDenizen implements Component {
 	public void applyGravity(Vector2 gravity) {
 		velocity.x += gravity.x;
 		velocity.y += gravity.y;
+		velocity.clamp(0, maxSpeed);
 	}
 	public void applyFriction(float friction) {
 		if (velocity.x > friction)
@@ -61,5 +63,14 @@ public class WorldDenizen implements Component {
 	}
 	public float getHeight() {
 		return aabb.height;
+	}
+	private final Vector2 tempReturn = new Vector2();
+	public Vector2 getCenter() {
+		tempReturn.set(aabb.x + aabb.width / 2, aabb.y + aabb.height / 2);
+		return tempReturn;
+	}
+	public float getSquareRadius() {
+		float radius = Math.max(aabb.width, aabb.height) / 2;
+		return radius * radius;
 	}
 }

@@ -17,6 +17,7 @@ import com.youllknow.game.fighting.input.PlayerWalkingSystem;
 import com.youllknow.game.fighting.player.PlayerAttachedWeaponSystem;
 import com.youllknow.game.fighting.player.PlayerWeapon;
 import com.youllknow.game.fighting.projectiles.PlayerShootingSystem;
+import com.youllknow.game.fighting.projectiles.ProjectileCollisionSystem;
 import com.youllknow.game.fighting.projectiles.ProjectileMovementSystem;
 import com.youllknow.game.fighting.projectiles.ProjectileWeapon;
 import com.youllknow.game.fighting.rendering.DebugWorldRenderer;
@@ -54,22 +55,30 @@ public class MainGameScreen implements Screen {
 		engine.addSystem(new PlayerWalkingSystem());
 		engine.addSystem(new FlooredGravitySystem());
 		engine.addSystem(new DenizenUpdateSystem());
+		engine.addSystem(new ProjectileCollisionSystem());
 		Schematic diagram = createDebugSchematic();
 		Entity popupEnt = createSchematicPopup(diagram);
 		engine.addEntity(popupEnt);
 		Entity player = createPlayer();
 		engine.addEntity(player);
+		engine.addEntity(createTargetDummy());
 	}
 	private Entity createPlayer() {
 		Entity entity = new Entity();
 		PlayerComponent player = new PlayerComponent();
 		WorldDenizen denizen = new WorldDenizen(new Rectangle(0, 0, 50, 50), 10);
 		PlayerWeapon weapon = new PlayerWeapon(entity, 25, 25);
-		ProjectileWeapon projectileWeapon = new ProjectileWeapon();
+		ProjectileWeapon projectileWeapon = new ProjectileWeapon(entity);
 		entity.add(player);
 		entity.add(denizen);
 		entity.add(weapon);
 		entity.add(projectileWeapon);
+		return entity;
+	}
+	private Entity createTargetDummy() {
+		Entity entity = new Entity();
+		WorldDenizen denizen = new WorldDenizen(new Rectangle(500, 200, 50, 50), 10);
+		entity.add(denizen);
 		return entity;
 	}
 	private Entity createSchematicPopup(Schematic diagram) {
