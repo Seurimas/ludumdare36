@@ -20,6 +20,7 @@ import com.youllknow.game.fighting.enemies.ExplosionDeathBehavior;
 import com.youllknow.game.fighting.enemies.TankAiSystem;
 import com.youllknow.game.fighting.enemies.TankEnemy;
 import com.youllknow.game.fighting.input.PlayerWalkingSystem;
+import com.youllknow.game.fighting.levels.EnemySpawningSystem;
 import com.youllknow.game.fighting.player.AttachedWeaponSystem;
 import com.youllknow.game.fighting.player.PlayerDeathBehavior;
 import com.youllknow.game.fighting.player.PlayerShootingSystem;
@@ -73,6 +74,7 @@ public class MainGameScreen implements Screen {
 		engine.addEntity(player);
 //		engine.addEntity(createTargetDummy());
 		TankEnemy.spawn(engine, player, new Vector2(500, 200));
+		engine.addSystem(new EnemySpawningSystem(player));
 	}
 	private Entity createPlayer() {
 		Entity entity = new Entity();
