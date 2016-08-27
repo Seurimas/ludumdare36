@@ -26,8 +26,10 @@ public class PlayerWalkingSystem extends EntitySystem {
 		else if (Gdx.input.isKeyPressed(Keys.D))
 			walkImpulse.x = 10000f * deltaTime;
 		for (WorldDenizen walker : walkers) {
-			walker.applyImpulse(walkImpulse);
-			walker.applyFriction(500 * deltaTime);
+			if (walkImpulse.isZero())
+				walker.applyFriction(10000 * deltaTime);
+			else
+				walker.applyImpulse(walkImpulse);
 		}
 	}
 }

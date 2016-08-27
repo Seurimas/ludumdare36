@@ -32,7 +32,8 @@ import com.youllknow.game.wiring.nodes.XorEnergyNode;
 public class MainGameScreen implements Screen {
 	private final LudumDare36Game game;
 	private static final int SCREEN_HEIGHT = 600; 
-	public static final int LOWER_UI_HEIGHT = 200;
+	public static final int LOWER_UI_HEIGHT = 150;
+	public static final int SCREEN_WIDTH = 800;
 	private OrthographicCamera camera = new OrthographicCamera(800, SCREEN_HEIGHT);
 	private Viewport viewport = new StretchViewport(800, SCREEN_HEIGHT, camera);
 	private final Engine engine;
@@ -78,7 +79,7 @@ public class MainGameScreen implements Screen {
 			public void click(Schematic schematic, EnergyNode node, boolean left, boolean right) {
 				System.out.println(node.getId());
 			}
-		}, new Rectangle(0, 0, 200, 150)));
+		}, new Rectangle(0, 0, 200, LOWER_UI_HEIGHT)));
 		return popupEnt;
 	}
 	private Schematic createDebugSchematic() {

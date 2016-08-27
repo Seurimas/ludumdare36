@@ -8,9 +8,11 @@ public class WorldDenizen implements Component {
 	private final Rectangle aabb;
 	private final Vector2 velocity = new Vector2();
 	private float weight;
+	private final float maxSpeed;
 	public WorldDenizen(Rectangle aabb, float weight) {
 		this.aabb = aabb;
 		this.weight = weight;
+		maxSpeed = 5000 / weight;
 	}
 	public void updateLocation(float delta) {
 		aabb.x += velocity.x * delta;
@@ -19,6 +21,7 @@ public class WorldDenizen implements Component {
 	public void applyImpulse(Vector2 impulse) {
 		velocity.x += impulse.x / weight;
 		velocity.y += impulse.y / weight;
+		velocity.clamp(0, maxSpeed);
 	}
 	public void applyGravity(Vector2 gravity) {
 		velocity.x += gravity.x;
