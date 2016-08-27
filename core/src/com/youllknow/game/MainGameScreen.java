@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.youllknow.game.fighting.DenizenUpdateSystem;
+import com.youllknow.game.fighting.HealthComponent;
 import com.youllknow.game.fighting.PlayerCameraSystem;
 import com.youllknow.game.fighting.PlayerComponent;
 import com.youllknow.game.fighting.WorldDenizen;
@@ -20,6 +21,7 @@ import com.youllknow.game.fighting.projectiles.PlayerShootingSystem;
 import com.youllknow.game.fighting.projectiles.ProjectileCollisionSystem;
 import com.youllknow.game.fighting.projectiles.ProjectileMovementSystem;
 import com.youllknow.game.fighting.projectiles.ProjectileWeapon;
+import com.youllknow.game.fighting.projectiles.behaviors.SingleShotBehavior;
 import com.youllknow.game.fighting.rendering.DebugWorldRenderer;
 import com.youllknow.game.fighting.world.FlooredGravitySystem;
 import com.youllknow.game.wiring.Schematic;
@@ -53,8 +55,8 @@ public class MainGameScreen implements Screen {
 		engine.addSystem(new PlayerAttachedWeaponSystem());
 		engine.addSystem(new ProjectileMovementSystem());
 		engine.addSystem(new PlayerWalkingSystem());
-		engine.addSystem(new FlooredGravitySystem());
 		engine.addSystem(new DenizenUpdateSystem());
+		engine.addSystem(new FlooredGravitySystem());
 		engine.addSystem(new ProjectileCollisionSystem());
 		Schematic diagram = createDebugSchematic();
 		Entity popupEnt = createSchematicPopup(diagram);
@@ -68,7 +70,7 @@ public class MainGameScreen implements Screen {
 		PlayerComponent player = new PlayerComponent();
 		WorldDenizen denizen = new WorldDenizen(new Rectangle(0, 0, 50, 50), 10);
 		PlayerWeapon weapon = new PlayerWeapon(entity, 25, 25);
-		ProjectileWeapon projectileWeapon = new ProjectileWeapon(entity);
+		ProjectileWeapon projectileWeapon = new ProjectileWeapon(entity, new SingleShotBehavior(5));
 		entity.add(player);
 		entity.add(denizen);
 		entity.add(weapon);
@@ -79,6 +81,7 @@ public class MainGameScreen implements Screen {
 		Entity entity = new Entity();
 		WorldDenizen denizen = new WorldDenizen(new Rectangle(500, 200, 50, 50), 10);
 		entity.add(denizen);
+		entity.add(new HealthComponent(50));
 		return entity;
 	}
 	private Entity createSchematicPopup(Schematic diagram) {

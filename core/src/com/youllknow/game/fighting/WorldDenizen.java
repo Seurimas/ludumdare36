@@ -20,16 +20,22 @@ public class WorldDenizen implements Component {
 		aabb.y += velocity.y * delta;
 	}
 	public void applyImpulse(Vector2 impulse) {
+		if (weight == 0)
+			return;
 		velocity.x += impulse.x / weight;
 		velocity.y += impulse.y / weight;
 		velocity.clamp(0, maxSpeed);
 	}
 	public void applyGravity(Vector2 gravity) {
+		if (weight == 0)
+			return;
 		velocity.x += gravity.x;
 		velocity.y += gravity.y;
 		velocity.clamp(0, maxSpeed);
 	}
 	public void applyFriction(float friction) {
+		if (weight == 0)
+			return;
 		if (velocity.x > friction)
 			velocity.x -= friction;
 		else if (velocity.x < -friction)

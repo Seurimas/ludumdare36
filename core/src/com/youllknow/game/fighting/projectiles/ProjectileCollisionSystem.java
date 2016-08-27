@@ -23,9 +23,10 @@ public class ProjectileCollisionSystem extends ComponentSystem<Projectile> {
 		Vector2 end = new Vector2();
 		start.set(projectile.position);
 		end.set(projectile.velocity).scl(delta).add(start);
-		for (WorldDenizen walker : walkers) {
+		for (Entity target : getEngine().getEntitiesFor(entityFamily)) {
+			WorldDenizen walker = target.getComponent(WorldDenizen.class);
 			if (Intersector.intersectSegmentCircle(start, end, walker.getCenter(), walker.getSquareRadius())) {
-				projectile.hit(engine, entity);
+				projectile.hit(engine, entity, target);
 			}
 		}
 	}
