@@ -38,6 +38,7 @@ import com.youllknow.game.wiring.SchematicInputSystem;
 import com.youllknow.game.wiring.SchematicPopup;
 import com.youllknow.game.wiring.SchematicPopup.SchematicInputBehavior;
 import com.youllknow.game.wiring.SchematicRenderer;
+import com.youllknow.game.wiring.nodes.OutputEnergyNode;
 import com.youllknow.game.wiring.nodes.XorEnergyNode;
 
 public class MainGameScreen implements Screen {
@@ -69,8 +70,12 @@ public class MainGameScreen implements Screen {
 		engine.addSystem(new TankAiSystem());
 		engine.addSystem(new DeathSystem());
 		Schematic diagram = createDebugSchematic();
-		Entity popupEnt = createSchematicPopup(diagram);
-		engine.addEntity(popupEnt);
+		Entity popupEnt1 = createSchematicPopup(createShieldSchematic(), new Rectangle(0, 0, 200, LOWER_UI_HEIGHT));
+		engine.addEntity(popupEnt1);
+		Entity popupEnt2 = createSchematicPopup(diagram, new Rectangle(200, 0, 200, LOWER_UI_HEIGHT / 2));
+		engine.addEntity(popupEnt2);
+		Entity popupEnt3 = createSchematicPopup(diagram, new Rectangle(200, LOWER_UI_HEIGHT / 2, 200, LOWER_UI_HEIGHT / 2));
+		engine.addEntity(popupEnt3);
 		Entity player = createPlayer();
 		engine.addEntity(player);
 //		engine.addEntity(createTargetDummy());
@@ -90,14 +95,14 @@ public class MainGameScreen implements Screen {
 		entity.add(new HealthComponent(100, new PlayerDeathBehavior()));
 		return entity;
 	}
-	private Entity createSchematicPopup(Schematic diagram) {
+	private Entity createSchematicPopup(Schematic diagram, Rectangle area) {
 		Entity popupEnt = new Entity();
 		popupEnt.add(new SchematicPopup(diagram, new SchematicInputBehavior() {
 			@Override
 			public void click(Schematic schematic, EnergyNode node, boolean left, boolean right) {
 				System.out.println(node.getId());
 			}
-		}, new Rectangle(0, 0, 200, LOWER_UI_HEIGHT)));
+		}, area));
 		return popupEnt;
 	}
 	private Schematic createDebugSchematic() {
@@ -113,6 +118,64 @@ public class MainGameScreen implements Screen {
 		diagram.setLocation(node3, 0.25f, 0.5f);
 		diagram.addWire(node1, node3);
 		diagram.addWire(node2, node3);
+		return diagram;
+	}
+	private Schematic createShieldSchematic() {
+		Schematic diagram = new Schematic();
+		EnergyNode dmgStrength = new OutputEnergyNode();
+		EnergyNode dmgType = new OutputEnergyNode();
+		EnergyNode heatLevel = new OutputEnergyNode();
+		EnergyNode healthLevel = new OutputEnergyNode();
+		diagram.addNode(dmgStrength);
+		diagram.addNode(dmgType);
+		diagram.addNode(heatLevel);
+		diagram.addNode(healthLevel);
+		diagram.setLocation(dmgType, 0, 2f / 3);
+		diagram.setLocation(dmgStrength, 0, 1f / 3);
+		diagram.setLocation(heatLevel, 0, 3f / 3);
+		diagram.setLocation(healthLevel, 0, 0f / 3);
+		EnergyNode subnode11 = new XorEnergyNode();
+		EnergyNode subnode12 = new XorEnergyNode();
+		EnergyNode subnode13 = new XorEnergyNode();
+		diagram.addNode(subnode11);
+		diagram.addNode(subnode12);
+		diagram.addNode(subnode13);
+		diagram.addWire(heatLevel, subnode11);
+		diagram.addWire(dmgType, subnode11);
+		diagram.addWire(dmgType, subnode12);
+		diagram.addWire(dmgStrength, subnode12);
+		diagram.addWire(dmgStrength, subnode13);
+		diagram.addWire(healthLevel, subnode13);
+		diagram.setLocation(subnode11, 0.25f, 5f / 6);
+		diagram.setLocation(subnode12, 0.25f, 3f / 6);
+		diagram.setLocation(subnode13, 0.25f, 1f / 6);
+		EnergyNode subnode21 = new XorEnergyNode();
+		EnergyNode subnode22 = new XorEnergyNode();
+		diagram.addNode(subnode21);
+		diagram.addNode(subnode22);
+		diagram.addWire(subnode11, subnode21);
+		diagram.addWire(subnode12, subnode21);
+		diagram.addWire(subnode12, subnode22);
+		diagram.addWire(subnode13, subnode22);
+		diagram.setLocation(subnode21, 0.5f, 4f / 6);
+		diagram.setLocation(subnode22, 0.5f, 2f / 6);
+		EnergyNode subnode31 = new XorEnergyNode();
+		EnergyNode matchDamageType = new OutputEnergyNode();
+		EnergyNode matchDamageStrength = new OutputEnergyNode();
+		diagram.addNode(subnode31);
+		diagram.addNode(matchDamageType);
+		diagram.addNode(matchDamageStrength);
+		diagram.addWire(subnode21, matchDamageType);
+		diagram.addWire(subnode22, matchDamageStrength);
+		diagram.addWire(subnode21, subnode31);
+		diagram.addWire(subnode22, subnode31);
+		diagram.setLocation(matchDamageType, 0.75f, 5f / 6);
+		diagram.setLocation(subnode31, 0.75f, 3f / 6);
+		diagram.setLocation(matchDamageStrength, 0.75f, 1f / 6);
+		EnergyNode matchHeatLevel = new OutputEnergyNode();
+		diagram.addNode(matchHeatLevel);
+		diagram.addWire(subnode31, matchHeatLevel);
+		diagram.setLocation(matchHeatLevel, 1f, 1f / 2);
 		return diagram;
 	}
 	@Override
