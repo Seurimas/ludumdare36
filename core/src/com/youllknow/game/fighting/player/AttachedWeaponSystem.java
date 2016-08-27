@@ -8,14 +8,14 @@ import com.youllknow.game.fighting.projectiles.ProjectileWeapon;
 import com.youllknow.game.utils.AshleyUtils.ComponentHandler;
 import com.youllknow.game.utils.AshleyUtils.ComponentSystem;
 
-public class PlayerAttachedWeaponSystem extends ComponentSystem<PlayerWeapon> {
+public class AttachedWeaponSystem extends ComponentSystem<AttachedWeapon> {
 
-	public PlayerAttachedWeaponSystem() {
-		super(PlayerWeapon.class);
+	public AttachedWeaponSystem() {
+		super(AttachedWeapon.class);
 	}
 
 	@Override
-	public void update(Engine engine, Entity entity, PlayerWeapon mainComponent, float delta) {
+	public void update(Engine engine, Entity entity, AttachedWeapon mainComponent, float delta) {
 		ProjectileWeapon weapon = entity.getComponent(ProjectileWeapon.class);
 		mainComponent.moveSource(weapon.source);
 	}

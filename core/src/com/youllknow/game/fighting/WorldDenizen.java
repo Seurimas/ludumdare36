@@ -26,6 +26,13 @@ public class WorldDenizen implements Component {
 		velocity.y += impulse.y / weight;
 		velocity.clamp(0, maxSpeed);
 	}
+	public void applyImpulse(Vector2 impulse, float delta) {
+		if (weight == 0)
+			return;
+		velocity.x += impulse.x / weight * delta;
+		velocity.y += impulse.y / weight * delta;
+		velocity.clamp(0, maxSpeed);
+	}
 	public void applyGravity(Vector2 gravity) {
 		if (weight == 0)
 			return;

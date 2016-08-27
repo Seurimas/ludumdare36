@@ -1,17 +1,17 @@
-package com.youllknow.game.fighting.projectiles;
+package com.youllknow.game.fighting.player;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
-import com.youllknow.game.fighting.player.PlayerWeapon;
+import com.youllknow.game.fighting.projectiles.ProjectileWeapon;
 import com.youllknow.game.input.InputMarshal;
 import com.youllknow.game.utils.AshleyUtils;
 import com.youllknow.game.utils.AshleyUtils.ComponentHandler;
 import com.youllknow.game.utils.AshleyUtils.ComponentSubSystem;
 
 public class PlayerShootingSystem extends EntitySystem implements ComponentHandler<ProjectileWeapon> {
-	Family entityFamily = Family.all(ProjectileWeapon.class, PlayerWeapon.class).get();
+	Family entityFamily = Family.all(ProjectileWeapon.class, AttachedWeapon.class).get();
 	private final ComponentSubSystem<ProjectileWeapon> weapons = new ComponentSubSystem<ProjectileWeapon>(entityFamily, ProjectileWeapon.class, this);
 	private final InputMarshal input;
 	public PlayerShootingSystem(InputMarshal input) {
