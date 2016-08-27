@@ -9,6 +9,8 @@ import com.youllknow.game.fighting.rendering.DenizenRenderer;
 import com.youllknow.game.fighting.rendering.DenizenRendererComponent;
 
 public class PlayerComponent implements Component, DenizenRendererComponent {
+	private static final float VERTICAL_FRAMES_IN_SHEET = 2f;
+	private static final float HORIZONTAL_FRAMES = 4f;
 	static {
 		DenizenRenderer.addRenderer(PlayerComponent.class);
 	}
@@ -27,6 +29,7 @@ public class PlayerComponent implements Component, DenizenRendererComponent {
 			duration = 0;
 		}
 		batch.draw(sprite, area.x, area.y, area.width, area.height, 
-				 frame / 4f, 0.5f, frame / 4f + 0.25f, 0);
+				 frame / HORIZONTAL_FRAMES, 1 / VERTICAL_FRAMES_IN_SHEET, 
+				 (frame + 1) / HORIZONTAL_FRAMES, 0);
 	}
 }
