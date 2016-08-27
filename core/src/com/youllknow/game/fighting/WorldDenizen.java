@@ -24,6 +24,21 @@ public class WorldDenizen implements Component {
 		velocity.x += gravity.x;
 		velocity.y += gravity.y;
 	}
+	public void applyFriction(float friction) {
+		if (velocity.x > friction)
+			velocity.x -= friction;
+		else if (velocity.x < -friction)
+			velocity.x += friction;
+		else
+			velocity.x = 0;
+		
+		if (velocity.y > friction)
+			velocity.y -= friction;
+		else if (velocity.y < -friction)
+			velocity.y += friction;
+		else
+			velocity.y = 0;
+	}
 	public void hitFloor(float y) {
 		aabb.y = y;
 		velocity.y = 0;

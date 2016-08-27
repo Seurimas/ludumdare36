@@ -22,11 +22,12 @@ public class PlayerWalkingSystem extends EntitySystem {
 	public void update(float deltaTime) {
 		Vector2 walkImpulse = new Vector2();
 		if (Gdx.input.isKeyPressed(Keys.A))
-			walkImpulse.x = -100f;
+			walkImpulse.x = -10000f * deltaTime;
 		else if (Gdx.input.isKeyPressed(Keys.D))
-			walkImpulse.x = 100f;
+			walkImpulse.x = 10000f * deltaTime;
 		for (WorldDenizen walker : walkers) {
 			walker.applyImpulse(walkImpulse);
+			walker.applyFriction(500 * deltaTime);
 		}
 	}
 }

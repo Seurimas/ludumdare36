@@ -1,9 +1,10 @@
-package com.youllknow.game.fighting.input;
+package com.youllknow.game.fighting.projectiles;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
+import com.youllknow.game.fighting.player.PlayerWeapon;
 import com.youllknow.game.input.InputMarshal;
 import com.youllknow.game.utils.AshleyUtils;
 import com.youllknow.game.utils.AshleyUtils.ComponentHandler;

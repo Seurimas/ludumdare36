@@ -7,8 +7,20 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
+import com.youllknow.game.fighting.projectiles.ProjectileWeapon;
+import com.youllknow.game.utils.AshleyUtils.ComponentSubSystem;
 
 public class AshleyUtils {
+	public static abstract class ComponentSystem<T extends Component> extends EntitySystem implements ComponentHandler<T> {
+		private final ComponentSubSystem<T> componentSet;
+		public ComponentSystem(Class<T> componentClass) {
+			this.componentSet = new ComponentSubSystem<T>(componentClass, this);
+		}
+		@Override
+		public void update(float deltaTime) {
+			componentSet.update(this, deltaTime);
+		}
+	}
 	public static <T extends Component> Iterable<T> getComponentIterable(final EntitySystem system, final Family family, final Class<T> componentClass) {
 		return new Iterable<T>() {
 			@Override
