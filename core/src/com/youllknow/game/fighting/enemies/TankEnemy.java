@@ -25,7 +25,7 @@ public class TankEnemy implements Component {
 		tank.add(new TankEnemy(player));
 		tank.add(new AttachedWeapon(tank, -10, -3));
 		tank.add(new ProjectileWeapon(tank, new SingleShotBehavior(3)));
-		tank.add(new HealthComponent(10));
+		tank.add(new HealthComponent(10, new ExplosionDeathBehavior()));
 		engine.addEntity(tank);
 	}
 	public void fire(Engine engine, Entity entity, Vector2 center) {

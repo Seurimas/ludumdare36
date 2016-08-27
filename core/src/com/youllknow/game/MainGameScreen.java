@@ -15,10 +15,13 @@ import com.youllknow.game.fighting.HealthComponent;
 import com.youllknow.game.fighting.PlayerCameraSystem;
 import com.youllknow.game.fighting.PlayerComponent;
 import com.youllknow.game.fighting.WorldDenizen;
+import com.youllknow.game.fighting.enemies.DeathSystem;
+import com.youllknow.game.fighting.enemies.ExplosionDeathBehavior;
 import com.youllknow.game.fighting.enemies.TankAiSystem;
 import com.youllknow.game.fighting.enemies.TankEnemy;
 import com.youllknow.game.fighting.input.PlayerWalkingSystem;
 import com.youllknow.game.fighting.player.AttachedWeaponSystem;
+import com.youllknow.game.fighting.player.PlayerDeathBehavior;
 import com.youllknow.game.fighting.player.PlayerShootingSystem;
 import com.youllknow.game.fighting.player.AttachedWeapon;
 import com.youllknow.game.fighting.projectiles.ProjectileCollisionSystem;
@@ -62,6 +65,7 @@ public class MainGameScreen implements Screen {
 		engine.addSystem(new FlooredGravitySystem());
 		engine.addSystem(new ProjectileCollisionSystem());
 		engine.addSystem(new TankAiSystem());
+		engine.addSystem(new DeathSystem());
 		Schematic diagram = createDebugSchematic();
 		Entity popupEnt = createSchematicPopup(diagram);
 		engine.addEntity(popupEnt);
@@ -80,14 +84,14 @@ public class MainGameScreen implements Screen {
 		entity.add(denizen);
 		entity.add(weapon);
 		entity.add(projectileWeapon);
-		entity.add(new HealthComponent(100));
+		entity.add(new HealthComponent(100, new PlayerDeathBehavior()));
 		return entity;
 	}
 	private Entity createTargetDummy() {
 		Entity entity = new Entity();
 		WorldDenizen denizen = new WorldDenizen(new Rectangle(500, 200, 50, 50), 10);
 		entity.add(denizen);
-		entity.add(new HealthComponent(50));
+		entity.add(new HealthComponent(50, new ExplosionDeathBehavior()));
 		return entity;
 	}
 	private Entity createSchematicPopup(Schematic diagram) {
