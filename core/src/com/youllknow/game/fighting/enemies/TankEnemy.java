@@ -24,7 +24,7 @@ public class TankEnemy implements Component {
 		tank.add(new WorldDenizen(new Rectangle(position.x - WIDTH / 2, position.y, 32, 32), 50));
 		tank.add(new TankEnemy(player));
 		tank.add(new AttachedWeapon(tank, -10, -3));
-		tank.add(new ProjectileWeapon(tank, new SingleShotBehavior(3)));
+		tank.add(new ProjectileWeapon(tank, new SingleShotBehavior(3), new PlayerOnlyTargetBehaviors()));
 		tank.add(new HealthComponent(10, new ExplosionDeathBehavior()));
 		engine.addEntity(tank);
 	}

@@ -3,9 +3,9 @@ package com.youllknow.game.fighting.projectiles.behaviors;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.youllknow.game.fighting.HealthComponent;
-import com.youllknow.game.fighting.projectiles.Projectile.Behavior;
+import com.youllknow.game.fighting.projectiles.Projectile.HitBehavior;
 
-public class SingleShotBehavior implements Behavior {
+public class SingleShotBehavior implements HitBehavior {
 	private final float damage;
 	public SingleShotBehavior(float damage) {
 		this.damage = damage;

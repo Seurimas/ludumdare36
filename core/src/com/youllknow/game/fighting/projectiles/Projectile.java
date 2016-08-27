@@ -6,17 +6,22 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 
 public class Projectile implements Component {
-	public static interface Behavior {
+	public static interface HitBehavior {
 		public boolean onHit(Engine engine, Entity self, Entity target);
 	}
+	public static interface TargetBehavior {
+		public boolean doesHit(Entity target);
+	}
 	private final Entity source;
-	private final Behavior behavior;
+	private final HitBehavior hitBehavior;
+	private final TargetBehavior targetBehavior;
 	public Vector2 position = new Vector2();
 	public Vector2 velocity = new Vector2();
 	public Projectile(Entity source, Vector2 position, Vector2 velocity,
-			Behavior behavior) {
+			HitBehavior hit, TargetBehavior target) {
 		this.source = source;
-		this.behavior = behavior;
+		hitBehavior = hit;
+		targetBehavior = target;
 		this.position.set(position);
 		this.velocity.set(velocity);
 	}
@@ -24,8 +29,8 @@ public class Projectile implements Component {
 		position.add(velocity.x * delta, velocity.y * delta);
 	}
 	public void hit(Engine engine, Entity projEntity, Entity entity) {
-		if (entity != source) {
-			if (behavior.onHit(engine, projEntity, entity))
+		if (targetBehavior.doesHit(entity)) {
+			if (hitBehavior.onHit(engine, projEntity, entity))
 				engine.removeEntity(projEntity);
 		}
 	}

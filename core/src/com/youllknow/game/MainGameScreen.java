@@ -25,6 +25,7 @@ import com.youllknow.game.fighting.player.AttachedWeaponSystem;
 import com.youllknow.game.fighting.player.PlayerDeathBehavior;
 import com.youllknow.game.fighting.player.PlayerShootingSystem;
 import com.youllknow.game.fighting.player.AttachedWeapon;
+import com.youllknow.game.fighting.projectiles.NonOwnerTargetbehavior;
 import com.youllknow.game.fighting.projectiles.ProjectileCollisionSystem;
 import com.youllknow.game.fighting.projectiles.ProjectileMovementSystem;
 import com.youllknow.game.fighting.projectiles.ProjectileWeapon;
@@ -81,19 +82,12 @@ public class MainGameScreen implements Screen {
 		PlayerComponent player = new PlayerComponent();
 		WorldDenizen denizen = new WorldDenizen(new Rectangle(0, 0, 50, 50), 10);
 		AttachedWeapon weapon = new AttachedWeapon(entity, 25, 25);
-		ProjectileWeapon projectileWeapon = new ProjectileWeapon(entity, new SingleShotBehavior(5));
+		ProjectileWeapon projectileWeapon = new ProjectileWeapon(entity, new SingleShotBehavior(5), new NonOwnerTargetbehavior());
 		entity.add(player);
 		entity.add(denizen);
 		entity.add(weapon);
 		entity.add(projectileWeapon);
 		entity.add(new HealthComponent(100, new PlayerDeathBehavior()));
-		return entity;
-	}
-	private Entity createTargetDummy() {
-		Entity entity = new Entity();
-		WorldDenizen denizen = new WorldDenizen(new Rectangle(500, 200, 50, 50), 10);
-		entity.add(denizen);
-		entity.add(new HealthComponent(50, new ExplosionDeathBehavior()));
 		return entity;
 	}
 	private Entity createSchematicPopup(Schematic diagram) {
