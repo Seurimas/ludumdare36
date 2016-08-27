@@ -24,15 +24,19 @@ public class SchematicPopup implements Component {
 	private static final Color c1 = Color.RED;
 	private static final Color c2 = Color.GREEN;
 	private static final Color c3 = Color.BLUE;
+	private static final float BORDER = 10;
 	public SchematicPopup(Schematic diagram, SchematicInputBehavior inputBehavior, Rectangle bounds) {
 		baseDiagram = diagram;
 		this.inputBehavior = inputBehavior;
-		this.bounds = bounds;
+		this.bounds = new Rectangle(bounds.x + BORDER, bounds.y + BORDER, 
+				bounds.width - BORDER * 2, bounds.height - BORDER * 2);
 	}
 	public void render(ShapeRenderer uiShapes, Batch uiBatch, float delta) {
 		lifetime += delta;
 		float flowPlace = (lifetime % 2);
 		uiShapes.begin(ShapeType.Line);
+		uiShapes.setColor(Color.GOLD);
+		uiShapes.rect(bounds.x, bounds.y, bounds.width, bounds.height);
 		for (Wire wire : baseDiagram.getWires()) {
 			temp1.set(baseDiagram.getLocation(wire.input));
 			scaleToBounds(temp1);
@@ -55,8 +59,8 @@ public class SchematicPopup implements Component {
 		uiShapes.end();
 	}
 	private void scaleToBounds(Vector2 temp) {
-		temp.add(bounds.x, bounds.y);
 		temp.scl(bounds.width, bounds.height);
+		temp.add(bounds.x, bounds.y);
 	}
 	public EnergyNode findNode(float mouseX, float mouseY) {
 		System.out.println(String.format("%f, %f", mouseX, mouseY));

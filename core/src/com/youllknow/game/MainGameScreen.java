@@ -9,6 +9,12 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.youllknow.game.fighting.DenizenUpdateSystem;
+import com.youllknow.game.fighting.PlayerComponent;
+import com.youllknow.game.fighting.WorldDenizen;
+import com.youllknow.game.fighting.input.PlayerWalkingSystem;
+import com.youllknow.game.fighting.rendering.DebugWorldRenderer;
+import com.youllknow.game.fighting.world.FlooredGravitySystem;
 import com.youllknow.game.wiring.Schematic;
 import com.youllknow.game.wiring.Schematic.EnergyNode;
 import com.youllknow.game.wiring.SchematicInputSystem;
@@ -32,8 +38,36 @@ public class MainGameScreen implements Screen {
 	}
 	private void setupEngine() {
 		engine.addSystem(new SchematicRenderer(game.uiShapes, game.uiBatch));
+		engine.addSystem(new DebugWorldRenderer(game.batch, game.shapes));
 		engine.addSystem(new SchematicInputSystem(game.input));
+		engine.addSystem(new PlayerWalkingSystem());
+		engine.addSystem(new FlooredGravitySystem());
+		engine.addSystem(new DenizenUpdateSystem());
+		Schematic diagram = createDebugSchematic();
+		Entity popupEnt = createSchematicPopup(diagram);
+		engine.addEntity(popupEnt);
+		Entity player = createPlayer();
+		engine.addEntity(player);
+	}
+	private Entity createPlayer() {
+		Entity entity = new Entity();
+		PlayerComponent player = new PlayerComponent();
+		WorldDenizen denizen = new WorldDenizen(new Rectangle(0, 0, 50, 50), 10);
+		entity.add(player);
+		entity.add(denizen);
+		return entity;
+	}
+	private Entity createSchematicPopup(Schematic diagram) {
 		Entity popupEnt = new Entity();
+		popupEnt.add(new SchematicPopup(diagram, new SchematicInputBehavior() {
+			@Override
+			public void click(Schematic schematic, EnergyNode node, boolean left, boolean right) {
+				System.out.println(node.getId());
+			}
+		}, new Rectangle(0, 0, 400, 300)));
+		return popupEnt;
+	}
+	private Schematic createDebugSchematic() {
 		Schematic diagram = new Schematic();
 		EnergyNode node1 = new XorEnergyNode();
 		diagram.addNode(node1);
@@ -46,13 +80,7 @@ public class MainGameScreen implements Screen {
 		diagram.setLocation(node3, 0.25f, 0.5f);
 		diagram.addWire(node1, node3);
 		diagram.addWire(node2, node3);
-		popupEnt.add(new SchematicPopup(diagram, new SchematicInputBehavior() {
-			@Override
-			public void click(Schematic schematic, EnergyNode node, boolean left, boolean right) {
-				System.out.println(node.getId());
-			}
-		}, new Rectangle(0, 0, 400, 300)));
-		engine.addEntity(popupEnt);
+		return diagram;
 	}
 	@Override
 	public void show() {
