@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.youllknow.game.fighting.DenizenUpdateSystem;
+import com.youllknow.game.fighting.PlayerCameraSystem;
 import com.youllknow.game.fighting.PlayerComponent;
 import com.youllknow.game.fighting.WorldDenizen;
 import com.youllknow.game.fighting.input.PlayerWalkingSystem;
@@ -25,10 +26,10 @@ import com.youllknow.game.wiring.nodes.XorEnergyNode;
 
 public class MainGameScreen implements Screen {
 	private final LudumDare36Game game;
-	private OrthographicCamera camera = new OrthographicCamera(800, 600);
-	private OrthographicCamera uiCamera = new OrthographicCamera(800, 600);
-	private Viewport viewport = new StretchViewport(800, 600, camera);
-	private Viewport uiViewport = new StretchViewport(800, 600, uiCamera);
+	private static final int SCREEN_HEIGHT = 600; 
+	public static final int LOWER_UI_HEIGHT = 200;
+	private OrthographicCamera camera = new OrthographicCamera(800, SCREEN_HEIGHT);
+	private Viewport viewport = new StretchViewport(800, SCREEN_HEIGHT, camera);
 	private final Engine engine;
 	public MainGameScreen(LudumDare36Game game) {
 		this.game = game;
@@ -37,6 +38,7 @@ public class MainGameScreen implements Screen {
 		setupEngine();
 	}
 	private void setupEngine() {
+		engine.addSystem(new PlayerCameraSystem(camera));
 		engine.addSystem(new SchematicRenderer(game.uiShapes, game.uiBatch));
 		engine.addSystem(new DebugWorldRenderer(game.batch, game.shapes));
 		engine.addSystem(new SchematicInputSystem(game.input));
@@ -64,7 +66,7 @@ public class MainGameScreen implements Screen {
 			public void click(Schematic schematic, EnergyNode node, boolean left, boolean right) {
 				System.out.println(node.getId());
 			}
-		}, new Rectangle(0, 0, 400, 300)));
+		}, new Rectangle(0, 0, 200, 150)));
 		return popupEnt;
 	}
 	private Schematic createDebugSchematic() {
@@ -90,10 +92,9 @@ public class MainGameScreen implements Screen {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		viewport.setScreenPosition(0, 0);
 		game.batch.setProjectionMatrix(camera.combined);
 		game.shapes.setProjectionMatrix(camera.combined);
-		game.uiBatch.setProjectionMatrix(uiCamera.combined);
-		game.uiShapes.setProjectionMatrix(uiCamera.combined);
 		game.input.update(viewport, delta);
 		engine.update(delta);
 	}
@@ -101,7 +102,8 @@ public class MainGameScreen implements Screen {
 	@Override
 	public void resize(int width, int height) {
 		viewport.update(width, height, true);
-		uiViewport.update(width, height, true);
+//		uiCamera.position.add(0, 0, 0);
+//		uiCamera.update();
 	}
 
 	@Override
