@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.youllknow.game.wiring.Schematic.EnergyNode;
+import com.youllknow.game.wiring.Schematic.EnergyNode.Energy;
 import com.youllknow.game.wiring.Schematic.Wire;
 
 public class SchematicPopup implements Component {
@@ -31,6 +32,10 @@ public class SchematicPopup implements Component {
 		this.bounds = new Rectangle(bounds.x + BORDER, bounds.y + BORDER, 
 				bounds.width - BORDER * 2, bounds.height - BORDER * 2);
 	}
+	private PowerFlow powerFlow;
+	public void setPowerFlow(PowerFlow powerFlow) {
+		this.powerFlow = powerFlow;
+	}
 	public void render(ShapeRenderer uiShapes, Batch uiBatch, float delta) {
 		lifetime += delta;
 		float flowPlace = (lifetime % 2);
@@ -38,16 +43,14 @@ public class SchematicPopup implements Component {
 		uiShapes.setColor(Color.GOLD);
 		uiShapes.rect(bounds.x - nodeScale, bounds.y - nodeScale, bounds.width + nodeScale * 2, bounds.height + nodeScale * 2);
 		for (Wire wire : baseDiagram.getWires()) {
-			temp1.set(baseDiagram.getLocation(wire.input));
-			scaleToBounds(temp1);
-			temp3.set(baseDiagram.getLocation(wire.output));
-			scaleToBounds(temp3);
-			if (flowPlace < 1)
-				temp2.set(temp1).interpolate(temp3, flowPlace, Interpolation.pow2);
-			else
-				temp2.set(temp1).interpolate(temp3, 2 - flowPlace, Interpolation.pow2);
-			uiShapes.line(temp1.x, temp1.y, temp2.x, temp2.y, c1, c2);
-			uiShapes.line(temp2.x, temp2.y, temp3.x, temp3.y, c2, c3);
+			if (powerFlow != null) {
+				Energy energy = powerFlow.getValue(wire);
+				if (energy != null) {
+					renderEnergyWire(uiShapes, flowPlace, wire, energy);
+					continue;
+				}
+			}
+			renderPulsingWire(uiShapes, flowPlace, wire);
 		}
 		uiShapes.end();
 		uiShapes.begin(ShapeType.Filled);
@@ -57,6 +60,28 @@ public class SchematicPopup implements Component {
 			uiShapes.circle(temp3.x, temp3.y, nodeScale);
 		}
 		uiShapes.end();
+	}
+	private void renderEnergyWire(ShapeRenderer uiShapes, float flowPlace, Wire wire, Energy energy) {
+		flowPlace = flowPlace % 1;
+		temp1.set(baseDiagram.getLocation(wire.input));
+		scaleToBounds(temp1);
+		temp3.set(baseDiagram.getLocation(wire.output));
+		scaleToBounds(temp3);
+		temp2.set(temp1).interpolate(temp3, flowPlace, Interpolation.linear);
+		uiShapes.line(temp1.x, temp1.y, temp2.x, temp2.y, energy.c1, energy.c2);
+		uiShapes.line(temp2.x, temp2.y, temp3.x, temp3.y, energy.c2, energy.c3);
+	}
+	private void renderPulsingWire(ShapeRenderer uiShapes, float flowPlace, Wire wire) {
+		temp1.set(baseDiagram.getLocation(wire.input));
+		scaleToBounds(temp1);
+		temp3.set(baseDiagram.getLocation(wire.output));
+		scaleToBounds(temp3);
+		if (flowPlace < 1)
+			temp2.set(temp1).interpolate(temp3, flowPlace, Interpolation.pow2);
+		else
+			temp2.set(temp1).interpolate(temp3, 2 - flowPlace, Interpolation.pow2);
+		uiShapes.line(temp1.x, temp1.y, temp2.x, temp2.y, c1, c2);
+		uiShapes.line(temp2.x, temp2.y, temp3.x, temp3.y, c2, c3);
 	}
 	private void scaleToBounds(Vector2 temp) {
 		temp.scl(bounds.width, bounds.height);

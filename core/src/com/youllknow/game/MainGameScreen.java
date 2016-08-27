@@ -39,6 +39,7 @@ import com.youllknow.game.fighting.rendering.DebugWorldRenderer;
 import com.youllknow.game.fighting.rendering.DenizenRenderer;
 import com.youllknow.game.fighting.rendering.DenizenRendererComponent;
 import com.youllknow.game.fighting.world.FlooredGravitySystem;
+import com.youllknow.game.wiring.PowerFlow;
 import com.youllknow.game.wiring.Schematic;
 import com.youllknow.game.wiring.Schematic.EnergyNode;
 import com.youllknow.game.wiring.Schematic.EnergyNode.Energy;
@@ -78,14 +79,14 @@ public class MainGameScreen implements Screen {
 		engine.addSystem(new TankAiSystem());
 		engine.addSystem(new DeathSystem());
 		Schematic diagram = createDebugSchematic();
-		Entity popupEnt1 = createSchematicPopup(createShieldSchematic(), new Rectangle(0, 0, 200, LOWER_UI_HEIGHT));
-		engine.addEntity(popupEnt1);
 		Entity popupEnt2 = createSchematicPopup(diagram, new Rectangle(200, 0, 200, LOWER_UI_HEIGHT / 2));
 		engine.addEntity(popupEnt2);
 		Entity popupEnt3 = createSchematicPopup(diagram, new Rectangle(200, LOWER_UI_HEIGHT / 2, 200, LOWER_UI_HEIGHT / 2));
 		engine.addEntity(popupEnt3);
 		Entity player = createPlayer();
 		engine.addEntity(player);
+		Entity popupEnt1 = createSchematicPopup(createShieldSchematic(player), new Rectangle(0, 0, 200, LOWER_UI_HEIGHT));
+		engine.addEntity(popupEnt1);
 //		engine.addEntity(createTargetDummy());
 		TankEnemy.spawn(engine, player, new Vector2(500, 200));
 		engine.addSystem(new EnemySpawningSystem(player));
@@ -105,12 +106,17 @@ public class MainGameScreen implements Screen {
 	}
 	private Entity createSchematicPopup(Schematic diagram, Rectangle area) {
 		Entity popupEnt = new Entity();
-		popupEnt.add(new SchematicPopup(diagram, new SchematicInputBehavior() {
+		SchematicPopup popup = new SchematicPopup(diagram, new SchematicInputBehavior() {
 			@Override
 			public void click(Schematic schematic, EnergyNode node, boolean left, boolean right) {
 				System.out.println(node.getId());
 			}
-		}, area));
+		}, area);
+		PowerFlow powerFlow = new PowerFlow(diagram);
+		powerFlow.calculate();
+		popup.setPowerFlow(powerFlow);
+		popupEnt.add(popup);
+		
 		return popupEnt;
 	}
 	private Schematic createDebugSchematic() {
@@ -128,30 +134,30 @@ public class MainGameScreen implements Screen {
 		diagram.addWire(node2, node3);
 		return diagram;
 	}
-	private Schematic createShieldSchematic() {
+	private Schematic createShieldSchematic(final Entity player) {
 		Schematic diagram = new Schematic();
 		EnergyNode dmgStrength = new GameStateEnergyOutputNode(null, new GameStateGetter() {
 			@Override
 			public Energy getValue() {
-				return null;
+				return player.getComponent(HealthComponent.class).getHealth() > 50 ? Energy.GREEN : Energy.RED;
 			}
 		});
 		EnergyNode dmgType = new GameStateEnergyOutputNode(null, new GameStateGetter() {
 			@Override
 			public Energy getValue() {
-				return null;
+				return player.getComponent(HealthComponent.class).getHealth() > 50 ? Energy.GREEN : Energy.RED;
 			}
 		});
 		EnergyNode heatLevel = new GameStateEnergyOutputNode(null, new GameStateGetter() {
 			@Override
 			public Energy getValue() {
-				return null;
+				return player.getComponent(HealthComponent.class).getHealth() > 50 ? Energy.GREEN : Energy.RED;
 			}
 		});
 		EnergyNode healthLevel = new GameStateEnergyOutputNode(null, new GameStateGetter() {
 			@Override
 			public Energy getValue() {
-				return null;
+				return player.getComponent(HealthComponent.class).getHealth() > 50 ? Energy.GREEN : Energy.RED;
 			}
 		});
 		diagram.addNode(dmgStrength);
