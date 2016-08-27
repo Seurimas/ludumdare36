@@ -1,7 +1,7 @@
 package com.youllknow.game.fighting.enemies;
 
 import com.badlogic.ashley.core.Entity;
-import com.youllknow.game.fighting.PlayerComponent;
+import com.youllknow.game.fighting.player.PlayerComponent;
 import com.youllknow.game.fighting.projectiles.Projectile.TargetBehavior;
 import com.youllknow.game.fighting.projectiles.ProjectileWeapon.TargetBehaviorFactory;
 

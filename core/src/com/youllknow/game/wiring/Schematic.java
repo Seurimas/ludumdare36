@@ -19,6 +19,8 @@ public class Schematic {
 		};
 		public int getId();
 		public TextureRegion getSprite();
+		public Energy getOutput();
+		public void handleInput(Energy input1);
 		public Energy getOutput(Energy input1, Energy input2);
 	}
 	public static class Wire {

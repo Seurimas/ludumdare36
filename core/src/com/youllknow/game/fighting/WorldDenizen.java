@@ -9,13 +9,14 @@ public class WorldDenizen implements Component {
 	private final Rectangle aabb;
 	private final Vector2 velocity = new Vector2();
 	private float weight;
-	private final float maxSpeed;
+//	private final float maxSpeed;
 	public WorldDenizen(Rectangle aabb, float weight) {
 		this.aabb = aabb;
 		this.weight = weight;
-		maxSpeed = 5000 / weight;
+//		maxSpeed = 50000 / weight;
 	}
 	public void updateLocation(float delta) {
+		velocity.x = MathUtils.clamp(velocity.x, -1000, 1000);
 		aabb.x += velocity.x * delta;
 		aabb.y += velocity.y * delta;
 	}
@@ -24,21 +25,18 @@ public class WorldDenizen implements Component {
 			return;
 		velocity.x += impulse.x / weight;
 		velocity.y += impulse.y / weight;
-		velocity.clamp(0, maxSpeed);
 	}
 	public void applyImpulse(Vector2 impulse, float delta) {
 		if (weight == 0)
 			return;
 		velocity.x += impulse.x / weight * delta;
 		velocity.y += impulse.y / weight * delta;
-		velocity.clamp(0, maxSpeed);
 	}
-	public void applyGravity(Vector2 gravity) {
+	public void applyGravity(Vector2 gravity, float delta) {
 		if (weight == 0)
 			return;
-		velocity.x += gravity.x;
-		velocity.y += gravity.y;
-		velocity.clamp(0, maxSpeed);
+		velocity.x += gravity.x * delta;
+		velocity.y += gravity.y * delta;
 	}
 	public void applyFriction(float friction) {
 		if (weight == 0)
@@ -50,12 +48,12 @@ public class WorldDenizen implements Component {
 		else
 			velocity.x = 0;
 		
-		if (velocity.y > friction)
-			velocity.y -= friction;
-		else if (velocity.y < -friction)
-			velocity.y += friction;
-		else
-			velocity.y = 0;
+//		if (velocity.y > friction)
+//			velocity.y -= friction;
+//		else if (velocity.y < -friction)
+//			velocity.y += friction;
+//		else
+//			velocity.y = 0;
 	}
 	public void hitFloor(float y) {
 		aabb.y = y;
@@ -77,6 +75,9 @@ public class WorldDenizen implements Component {
 	public float getHeight() {
 		return aabb.height;
 	}
+	public Rectangle getBounds() {
+		return aabb;
+	}
 	private final Vector2 tempReturn = new Vector2();
 	public Vector2 getCenter() {
 		tempReturn.set(aabb.x + aabb.width / 2, aabb.y + aabb.height / 2);
@@ -85,5 +86,11 @@ public class WorldDenizen implements Component {
 	public float getSquareRadius() {
 		float radius = Math.max(aabb.width, aabb.height) / 2;
 		return radius * radius;
+	}
+	public float getVelocityX() {
+		return velocity.x;
+	}
+	public float getVelocityY() {
+		return velocity.y;
 	}
 }

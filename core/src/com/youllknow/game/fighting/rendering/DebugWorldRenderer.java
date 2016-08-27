@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.youllknow.game.fighting.PlayerComponent;
 import com.youllknow.game.fighting.WorldDenizen;
+import com.youllknow.game.fighting.player.PlayerComponent;
 import com.youllknow.game.fighting.projectiles.Projectile;
 import com.youllknow.game.utils.AshleyUtils;
 

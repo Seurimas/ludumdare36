@@ -9,13 +9,14 @@ import com.youllknow.game.utils.AshleyUtils;
 public class FlooredGravitySystem extends EntitySystem {
 	private static final Family entityFamily = Family.all(WorldDenizen.class).get();
 	private final Iterable<WorldDenizen> denizens = AshleyUtils.getComponentIterable(this, entityFamily, WorldDenizen.class);
-	private static final Vector2 gravity = new Vector2(0, -33f);
+	private static final Vector2 gravity = new Vector2(0, -3000f);
 	@Override
 	public void update(float deltaTime) {
 		for (WorldDenizen denizen : denizens) {
-			denizen.applyGravity(gravity);
-			if (denizen.getY() < 0)
+			if (denizen.getY() <= 0 && denizen.getVelocityY() <= 0)
 				denizen.hitFloor(0);
+			else
+				denizen.applyGravity(gravity, deltaTime);
 		}
 	}
 }

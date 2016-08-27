@@ -19,7 +19,7 @@ public class SchematicPopup implements Component {
 	private Schematic baseDiagram;
 	private Rectangle bounds;
 	private SchematicInputBehavior inputBehavior;
-	private final float nodeScale = 10f;
+	private final float nodeScale = 6f;
 	private static final Vector2 temp1 = new Vector2(), temp2 = new Vector2(), temp3 = new Vector2();
 	private static final Color c1 = Color.RED;
 	private static final Color c2 = Color.GREEN;
@@ -36,7 +36,7 @@ public class SchematicPopup implements Component {
 		float flowPlace = (lifetime % 2);
 		uiShapes.begin(ShapeType.Line);
 		uiShapes.setColor(Color.GOLD);
-		uiShapes.rect(bounds.x, bounds.y, bounds.width, bounds.height);
+		uiShapes.rect(bounds.x - nodeScale, bounds.y - nodeScale, bounds.width + nodeScale * 2, bounds.height + nodeScale * 2);
 		for (Wire wire : baseDiagram.getWires()) {
 			temp1.set(baseDiagram.getLocation(wire.input));
 			scaleToBounds(temp1);

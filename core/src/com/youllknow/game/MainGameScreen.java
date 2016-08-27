@@ -6,24 +6,29 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.youllknow.game.ancient.GameStateEnergyOutputNode;
+import com.youllknow.game.ancient.GameStateEnergyOutputNode.GameStateGetter;
 import com.youllknow.game.fighting.DenizenUpdateSystem;
 import com.youllknow.game.fighting.HealthComponent;
-import com.youllknow.game.fighting.PlayerCameraSystem;
-import com.youllknow.game.fighting.PlayerComponent;
 import com.youllknow.game.fighting.WorldDenizen;
 import com.youllknow.game.fighting.enemies.DeathSystem;
 import com.youllknow.game.fighting.enemies.ExplosionDeathBehavior;
 import com.youllknow.game.fighting.enemies.TankAiSystem;
 import com.youllknow.game.fighting.enemies.TankEnemy;
-import com.youllknow.game.fighting.input.PlayerWalkingSystem;
 import com.youllknow.game.fighting.levels.EnemySpawningSystem;
 import com.youllknow.game.fighting.player.AttachedWeaponSystem;
+import com.youllknow.game.fighting.player.PlayerCameraSystem;
+import com.youllknow.game.fighting.player.PlayerComponent;
 import com.youllknow.game.fighting.player.PlayerDeathBehavior;
 import com.youllknow.game.fighting.player.PlayerShootingSystem;
+import com.youllknow.game.fighting.player.PlayerWalkingSystem;
 import com.youllknow.game.fighting.player.AttachedWeapon;
 import com.youllknow.game.fighting.projectiles.NonOwnerTargetbehavior;
 import com.youllknow.game.fighting.projectiles.ProjectileCollisionSystem;
@@ -31,15 +36,17 @@ import com.youllknow.game.fighting.projectiles.ProjectileMovementSystem;
 import com.youllknow.game.fighting.projectiles.ProjectileWeapon;
 import com.youllknow.game.fighting.projectiles.behaviors.SingleShotBehavior;
 import com.youllknow.game.fighting.rendering.DebugWorldRenderer;
+import com.youllknow.game.fighting.rendering.DenizenRenderer;
+import com.youllknow.game.fighting.rendering.DenizenRendererComponent;
 import com.youllknow.game.fighting.world.FlooredGravitySystem;
 import com.youllknow.game.wiring.Schematic;
 import com.youllknow.game.wiring.Schematic.EnergyNode;
+import com.youllknow.game.wiring.Schematic.EnergyNode.Energy;
 import com.youllknow.game.wiring.SchematicInputSystem;
 import com.youllknow.game.wiring.SchematicPopup;
 import com.youllknow.game.wiring.SchematicPopup.SchematicInputBehavior;
 import com.youllknow.game.wiring.SchematicRenderer;
-import com.youllknow.game.wiring.nodes.OutputEnergyNode;
-import com.youllknow.game.wiring.nodes.XorEnergyNode;
+import com.youllknow.game.wiring.nodes.LogicEnergyNode;
 
 public class MainGameScreen implements Screen {
 	private final LudumDare36Game game;
@@ -59,6 +66,7 @@ public class MainGameScreen implements Screen {
 		engine.addSystem(new PlayerCameraSystem(camera));
 		engine.addSystem(new SchematicRenderer(game.uiShapes, game.uiBatch));
 		engine.addSystem(new DebugWorldRenderer(game.batch, game.shapes));
+		engine.addSystem(new DenizenRenderer(game.batch));
 		engine.addSystem(new SchematicInputSystem(game.input));
 		engine.addSystem(new PlayerShootingSystem(game.input));
 		engine.addSystem(new AttachedWeaponSystem());
@@ -84,7 +92,7 @@ public class MainGameScreen implements Screen {
 	}
 	private Entity createPlayer() {
 		Entity entity = new Entity();
-		PlayerComponent player = new PlayerComponent();
+		PlayerComponent player = new PlayerComponent(game.assets.get(game.MAIN_TEXTURE, Texture.class));
 		WorldDenizen denizen = new WorldDenizen(new Rectangle(0, 0, 50, 50), 10);
 		AttachedWeapon weapon = new AttachedWeapon(entity, 25, 25);
 		ProjectileWeapon projectileWeapon = new ProjectileWeapon(entity, new SingleShotBehavior(5), new NonOwnerTargetbehavior());
@@ -107,13 +115,13 @@ public class MainGameScreen implements Screen {
 	}
 	private Schematic createDebugSchematic() {
 		Schematic diagram = new Schematic();
-		EnergyNode node1 = new XorEnergyNode();
+		EnergyNode node1 = new LogicEnergyNode(LogicEnergyNode.sameOrNeither);
 		diagram.addNode(node1);
 		diagram.setLocation(node1, 0, 0.66f);
-		EnergyNode node2 = new XorEnergyNode();
+		EnergyNode node2 = new LogicEnergyNode(LogicEnergyNode.sameOrNeither);
 		diagram.addNode(node2);
 		diagram.setLocation(node2, 0, 0.33f);
-		EnergyNode node3 = new XorEnergyNode();
+		EnergyNode node3 = new LogicEnergyNode(LogicEnergyNode.sameOrNeither);
 		diagram.addNode(node3);
 		diagram.setLocation(node3, 0.25f, 0.5f);
 		diagram.addWire(node1, node3);
@@ -122,10 +130,30 @@ public class MainGameScreen implements Screen {
 	}
 	private Schematic createShieldSchematic() {
 		Schematic diagram = new Schematic();
-		EnergyNode dmgStrength = new OutputEnergyNode();
-		EnergyNode dmgType = new OutputEnergyNode();
-		EnergyNode heatLevel = new OutputEnergyNode();
-		EnergyNode healthLevel = new OutputEnergyNode();
+		EnergyNode dmgStrength = new GameStateEnergyOutputNode(null, new GameStateGetter() {
+			@Override
+			public Energy getValue() {
+				return null;
+			}
+		});
+		EnergyNode dmgType = new GameStateEnergyOutputNode(null, new GameStateGetter() {
+			@Override
+			public Energy getValue() {
+				return null;
+			}
+		});
+		EnergyNode heatLevel = new GameStateEnergyOutputNode(null, new GameStateGetter() {
+			@Override
+			public Energy getValue() {
+				return null;
+			}
+		});
+		EnergyNode healthLevel = new GameStateEnergyOutputNode(null, new GameStateGetter() {
+			@Override
+			public Energy getValue() {
+				return null;
+			}
+		});
 		diagram.addNode(dmgStrength);
 		diagram.addNode(dmgType);
 		diagram.addNode(heatLevel);
@@ -134,9 +162,9 @@ public class MainGameScreen implements Screen {
 		diagram.setLocation(dmgStrength, 0, 1f / 3);
 		diagram.setLocation(heatLevel, 0, 3f / 3);
 		diagram.setLocation(healthLevel, 0, 0f / 3);
-		EnergyNode subnode11 = new XorEnergyNode();
-		EnergyNode subnode12 = new XorEnergyNode();
-		EnergyNode subnode13 = new XorEnergyNode();
+		EnergyNode subnode11 = new LogicEnergyNode(LogicEnergyNode.sameOrNeither);
+		EnergyNode subnode12 = new LogicEnergyNode(LogicEnergyNode.sameOrNeither);
+		EnergyNode subnode13 = new LogicEnergyNode(LogicEnergyNode.sameOrNeither);
 		diagram.addNode(subnode11);
 		diagram.addNode(subnode12);
 		diagram.addNode(subnode13);
@@ -149,8 +177,8 @@ public class MainGameScreen implements Screen {
 		diagram.setLocation(subnode11, 0.25f, 5f / 6);
 		diagram.setLocation(subnode12, 0.25f, 3f / 6);
 		diagram.setLocation(subnode13, 0.25f, 1f / 6);
-		EnergyNode subnode21 = new XorEnergyNode();
-		EnergyNode subnode22 = new XorEnergyNode();
+		EnergyNode subnode21 = new LogicEnergyNode(LogicEnergyNode.sameOrNeither);
+		EnergyNode subnode22 = new LogicEnergyNode(LogicEnergyNode.sameOrNeither);
 		diagram.addNode(subnode21);
 		diagram.addNode(subnode22);
 		diagram.addWire(subnode11, subnode21);
@@ -159,9 +187,19 @@ public class MainGameScreen implements Screen {
 		diagram.addWire(subnode13, subnode22);
 		diagram.setLocation(subnode21, 0.5f, 4f / 6);
 		diagram.setLocation(subnode22, 0.5f, 2f / 6);
-		EnergyNode subnode31 = new XorEnergyNode();
-		EnergyNode matchDamageType = new OutputEnergyNode();
-		EnergyNode matchDamageStrength = new OutputEnergyNode();
+		EnergyNode subnode31 = new LogicEnergyNode(LogicEnergyNode.sameOrNeither);
+		EnergyNode matchDamageType = new GameStateEnergyOutputNode(null, new GameStateGetter() {
+			@Override
+			public Energy getValue() {
+				return null;
+			}
+		});
+		EnergyNode matchDamageStrength = new GameStateEnergyOutputNode(null, new GameStateGetter() {
+			@Override
+			public Energy getValue() {
+				return null;
+			}
+		});
 		diagram.addNode(subnode31);
 		diagram.addNode(matchDamageType);
 		diagram.addNode(matchDamageStrength);
@@ -172,7 +210,12 @@ public class MainGameScreen implements Screen {
 		diagram.setLocation(matchDamageType, 0.75f, 5f / 6);
 		diagram.setLocation(subnode31, 0.75f, 3f / 6);
 		diagram.setLocation(matchDamageStrength, 0.75f, 1f / 6);
-		EnergyNode matchHeatLevel = new OutputEnergyNode();
+		EnergyNode matchHeatLevel = new GameStateEnergyOutputNode(null, new GameStateGetter() {
+			@Override
+			public Energy getValue() {
+				return null;
+			}
+		});
 		diagram.addNode(matchHeatLevel);
 		diagram.addWire(subnode31, matchHeatLevel);
 		diagram.setLocation(matchHeatLevel, 1f, 1f / 2);
