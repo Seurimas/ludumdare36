@@ -15,7 +15,8 @@ public class PlayerCameraSystem extends EntitySystem implements ComponentHandler
 	public PlayerCameraSystem(OrthographicCamera camera) {
 		this.camera = camera;
 	}
-	private final ComponentSubSystem<WorldDenizen> subSystem = new ComponentSubSystem<WorldDenizen>(WorldDenizen.class, this);
+	Family playerFamily = Family.all(PlayerComponent.class, WorldDenizen.class).get();
+	private final ComponentSubSystem<WorldDenizen> subSystem = new ComponentSubSystem<WorldDenizen>(playerFamily, WorldDenizen.class, this);
 	@Override
 	public void update(float deltaTime) {
 		subSystem.update(this, deltaTime);

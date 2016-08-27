@@ -16,12 +16,12 @@ public class SchematicInputSystem extends EntitySystem {
 	}
 	@Override
 	public void update(float deltaTime) {
-		if (input.isLeftJustClicked() || input.isRightJustClicked()) {
+		if (input.isLeftJustClicked(true) || input.isRightJustClicked(true)) {
 			for (Entity entity : getEngine().getEntitiesFor(entityFamily)) {
 				SchematicPopup popup = entity.getComponent(SchematicPopup.class);
-				EnergyNode node = popup.findNode(input.mouseX, input.mouseY);
+				EnergyNode node = popup.findNode(input.uiX, input.uiY);
 				if (node != null) {
-					popup.handleClick(node, input.isLeftJustClicked(), input.isRightJustClicked());
+					popup.handleClick(node, input.isLeftJustClicked(true), input.isRightJustClicked(true));
 					return;
 				}
 			}
