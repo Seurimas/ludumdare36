@@ -25,7 +25,8 @@ public class PlayerCameraSystem extends EntitySystem implements ComponentHandler
 
 	@Override
 	public void update(Engine engine, Entity entity, WorldDenizen denizen, float delta) {
-		camera.position.set(denizen.getX() + MainGameScreen.SCREEN_WIDTH * 0.33f, denizen.getY() - denizen.getHeight() + camera.viewportHeight / 2 - MainGameScreen.LOWER_UI_HEIGHT, 0);
+		camera.position.set(denizen.getX() + MainGameScreen.SCREEN_WIDTH * 0.33f, 
+				MainGameScreen.WORLD_HEIGHT / 2 - MainGameScreen.LOWER_UI_HEIGHT / 2, 0);
 		camera.update();
 	}
 }

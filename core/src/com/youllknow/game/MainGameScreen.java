@@ -29,6 +29,7 @@ import com.youllknow.game.fighting.player.AttachedWeaponSystem;
 import com.youllknow.game.fighting.player.PlayerCameraSystem;
 import com.youllknow.game.fighting.player.PlayerComponent;
 import com.youllknow.game.fighting.player.PlayerDeathBehavior;
+import com.youllknow.game.fighting.player.PlayerFlyingSystem;
 import com.youllknow.game.fighting.player.PlayerShootingSystem;
 import com.youllknow.game.fighting.player.PlayerWalkingSystem;
 import com.youllknow.game.fighting.player.PlayerWeapon;
@@ -46,6 +47,7 @@ import com.youllknow.game.fighting.projectiles.ProjectileCollisionSystem;
 import com.youllknow.game.fighting.projectiles.ProjectileMovementSystem;
 import com.youllknow.game.fighting.projectiles.ProjectileWeapon;
 import com.youllknow.game.fighting.projectiles.behaviors.SingleShotBehavior;
+import com.youllknow.game.fighting.rendering.BackdropRenderer;
 import com.youllknow.game.fighting.rendering.DebugWorldRenderer;
 import com.youllknow.game.fighting.rendering.DenizenRenderer;
 import com.youllknow.game.fighting.rendering.DenizenRendererComponent;
@@ -62,8 +64,9 @@ import com.youllknow.game.wiring.nodes.LogicEnergyNode;
 
 public class MainGameScreen implements Screen {
 	private final LudumDare36Game game;
-	private static final int SCREEN_HEIGHT = 600; 
-	public static final int LOWER_UI_HEIGHT = 150;
+	public static final int SCREEN_HEIGHT = 600; 
+	public static final int LOWER_UI_HEIGHT = 150; 
+	public static final int WORLD_HEIGHT = SCREEN_HEIGHT - LOWER_UI_HEIGHT;
 	public static final int SCREEN_WIDTH = 800;
 	private OrthographicCamera camera = new OrthographicCamera(800, SCREEN_HEIGHT);
 	private Viewport viewport = new StretchViewport(800, SCREEN_HEIGHT, camera);
@@ -73,9 +76,13 @@ public class MainGameScreen implements Screen {
 		viewport.apply(true);
 		this.engine = new Engine();
 		setupEngine();
+		Texture mainTexture = game.assets.get(game.MAIN_TEXTURE, Texture.class);
+		TankEnemy.setSprite(new TextureRegion(mainTexture, 0, 32, 32, 32));
 	}
 	private void setupEngine() {
+		Texture mainTexture = game.assets.get(game.MAIN_TEXTURE, Texture.class);
 		engine.addSystem(new PlayerCameraSystem(camera));
+		engine.addSystem(new BackdropRenderer(game.batch, viewport, mainTexture));
 		engine.addSystem(new SchematicRenderer(game.uiShapes, game.uiBatch));
 		engine.addSystem(new DebugWorldRenderer(game.batch, game.shapes));
 		engine.addSystem(new DenizenRenderer(game.batch));
@@ -83,9 +90,9 @@ public class MainGameScreen implements Screen {
 		engine.addSystem(new PlayerShootingSystem(game.input));
 		engine.addSystem(new AttachedWeaponSystem());
 		engine.addSystem(new ProjectileMovementSystem());
-		engine.addSystem(new PlayerWalkingSystem());
+		engine.addSystem(new PlayerFlyingSystem());
 		engine.addSystem(new DenizenUpdateSystem());
-		engine.addSystem(new FlooredGravitySystem());
+//		engine.addSystem(new FlooredGravitySystem());
 		engine.addSystem(new ProjectileCollisionSystem());
 		engine.addSystem(new TankAiSystem());
 		engine.addSystem(new DeathSystem());

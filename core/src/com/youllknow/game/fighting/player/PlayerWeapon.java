@@ -71,7 +71,7 @@ public class PlayerWeapon implements Component {
 		temp.set(denizen.getCenter());
 		temp.scl(-1).add(worldX, worldY);
 		temp.nor().scl(600f);
-		temp.add(denizen.getVelocity());
+//		temp.add(denizen.getVelocity());
 		dummy.add(new Projectile(entity, denizen.getCenter(), temp, new MultiShotBehavior(shotCount, damage > 15 ? DamageType.EXPLOSIVE : DamageType.ENERGY, damage), 
 				new NonOwnerTargetBehavior().getBehavior(entity)));
 		engine.addEntity(dummy);

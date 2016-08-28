@@ -97,4 +97,7 @@ public class WorldDenizen implements Component {
 		tempReturn.set(velocity);
 		return tempReturn;
 	}
+	public void setVelocity(Vector2 targetMovement) {
+		velocity.set(targetMovement);
+	}
 }
