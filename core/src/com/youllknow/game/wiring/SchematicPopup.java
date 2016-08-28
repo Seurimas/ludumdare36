@@ -57,9 +57,18 @@ public class SchematicPopup implements Component {
 		for (EnergyNode node : baseDiagram.getNodes()) {
 			temp3.set(baseDiagram.getLocation(node));
 			scaleToBounds(temp3);
-			uiShapes.circle(temp3.x, temp3.y, nodeScale);
+			if (node.getSprite() == null)
+				uiShapes.circle(temp3.x, temp3.y, nodeScale);
 		}
 		uiShapes.end();
+		uiBatch.begin();
+		for (EnergyNode node : baseDiagram.getNodes()) {
+			temp3.set(baseDiagram.getLocation(node));
+			scaleToBounds(temp3);
+			if (node.getSprite() != null)
+				uiBatch.draw(node.getSprite(), temp3.x - nodeScale, temp3.y - nodeScale, nodeScale * 2, nodeScale * 2);
+		}
+		uiBatch.end();
 	}
 	private void renderEnergyWire(ShapeRenderer uiShapes, float flowPlace, Wire wire, Energy energy) {
 		flowPlace = flowPlace % 1;
