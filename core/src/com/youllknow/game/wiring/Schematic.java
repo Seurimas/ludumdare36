@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.youllknow.game.wiring.Schematic.EnergyNode;
+import com.youllknow.game.wiring.Schematic.EnergyNode.Energy;
+import com.youllknow.game.wiring.Schematic.Wire;
 
 public class Schematic {
 	public static interface EnergyNode {
@@ -27,8 +29,8 @@ public class Schematic {
 		public int getId();
 		public TextureRegion getSprite();
 		public Energy getOutput();
-		public void handleInput(Energy input1);
 		public Energy getOutput(Energy input1, Energy input2);
+		public void handleInput(Wire wire, Energy input1);
 	}
 	public static class Wire {
 		public final EnergyNode input, output;

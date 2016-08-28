@@ -25,7 +25,7 @@ public class DenizenRenderer extends ComponentSystem<WorldDenizen> {
 		for (Class<? extends DenizenRendererComponent> renderer : renderers) {
 			DenizenRendererComponent rendererComponent = entity.getComponent(renderer);
 			if (rendererComponent != null)
-				rendererComponent.draw(batch, walker.getBounds(), delta);
+				rendererComponent.draw(batch, entity, walker.getBounds(), delta);
 		}
 		batch.end();
 	}

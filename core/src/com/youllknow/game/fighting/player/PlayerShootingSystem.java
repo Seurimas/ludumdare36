@@ -10,15 +10,15 @@ import com.youllknow.game.utils.AshleyUtils;
 import com.youllknow.game.utils.AshleyUtils.ComponentHandler;
 import com.youllknow.game.utils.AshleyUtils.ComponentSubSystem;
 
-public class PlayerShootingSystem extends EntitySystem implements ComponentHandler<ProjectileWeapon> {
-	Family entityFamily = Family.all(ProjectileWeapon.class, AttachedWeapon.class).get();
-	private final ComponentSubSystem<ProjectileWeapon> weapons = new ComponentSubSystem<ProjectileWeapon>(entityFamily, ProjectileWeapon.class, this);
+public class PlayerShootingSystem extends EntitySystem implements ComponentHandler<PlayerWeapon> {
+	Family entityFamily = Family.all(PlayerWeapon.class).get();
+	private final ComponentSubSystem<PlayerWeapon> weapons = new ComponentSubSystem<PlayerWeapon>(entityFamily, PlayerWeapon.class, this);
 	private final InputMarshal input;
 	public PlayerShootingSystem(InputMarshal input) {
 		this.input = input;
 	}
 	@Override
-	public void update(Engine engine, Entity entity, ProjectileWeapon mainComponent, float delta) {
+	public void update(Engine engine, Entity entity, PlayerWeapon mainComponent, float delta) {
 		if (input.isLeftJustClicked(false)) {
 			mainComponent.fire(engine, entity, input.worldX, input.worldY);
 		}

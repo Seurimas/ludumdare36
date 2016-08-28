@@ -1,11 +1,12 @@
 package com.youllknow.game.ancient;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.youllknow.game.wiring.Schematic.Wire;
 import com.youllknow.game.wiring.nodes.RegisteredEnergyNode;
 
 public class GameStateEnergyInputNode extends RegisteredEnergyNode {
 	public static interface GameStateSetter {
-		public void handleInput(Energy energy);
+		public void handleInput(Wire wire, Energy energy);
 	}
 	private final TextureRegion sprite;
 	private final GameStateSetter gameState;
@@ -24,8 +25,8 @@ public class GameStateEnergyInputNode extends RegisteredEnergyNode {
 	}
 
 	@Override
-	public void handleInput(Energy input1) {
-		gameState.handleInput(input1);
+	public void handleInput(Wire wire, Energy input1) {
+		gameState.handleInput(wire, input1);
 	}
 
 	@Override

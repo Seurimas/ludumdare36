@@ -93,4 +93,8 @@ public class WorldDenizen implements Component {
 	public float getVelocityY() {
 		return velocity.y;
 	}
+	public Vector2 getVelocity() {
+		tempReturn.set(velocity);
+		return tempReturn;
+	}
 }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.youllknow.game.wiring.Schematic;
 import com.youllknow.game.wiring.Schematic.EnergyNode;
 import com.youllknow.game.wiring.Schematic.EnergyNode.Energy;
+import com.youllknow.game.wiring.Schematic.Wire;
 
 public class LogicEnergyNode extends RegisteredEnergyNode {
 	public static interface Logic {
@@ -48,6 +49,6 @@ public class LogicEnergyNode extends RegisteredEnergyNode {
 	}
 
 	@Override
-	public void handleInput(Energy input1) {
+	public void handleInput(Wire wire, Energy input1) {
 	}
 }

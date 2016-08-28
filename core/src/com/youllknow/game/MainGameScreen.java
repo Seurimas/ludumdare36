@@ -31,14 +31,17 @@ import com.youllknow.game.fighting.player.PlayerComponent;
 import com.youllknow.game.fighting.player.PlayerDeathBehavior;
 import com.youllknow.game.fighting.player.PlayerShootingSystem;
 import com.youllknow.game.fighting.player.PlayerWalkingSystem;
+import com.youllknow.game.fighting.player.PlayerWeapon;
 import com.youllknow.game.fighting.player.nodes.DamageStrengthGetter;
 import com.youllknow.game.fighting.player.nodes.DamageTypeGetter;
 import com.youllknow.game.fighting.player.nodes.HealthGetter;
 import com.youllknow.game.fighting.player.nodes.HeatGetter;
+import com.youllknow.game.fighting.player.nodes.PlayerWeaponSetter;
 import com.youllknow.game.fighting.player.nodes.WeaponChargeGetter;
 import com.youllknow.game.fighting.player.nodes.WeaponSettingsGetter;
+import com.youllknow.game.fighting.player.nodes.PlayerWeaponSetter.WeaponStat;
 import com.youllknow.game.fighting.player.AttachedWeapon;
-import com.youllknow.game.fighting.projectiles.NonOwnerTargetbehavior;
+import com.youllknow.game.fighting.projectiles.NonOwnerTargetBehavior;
 import com.youllknow.game.fighting.projectiles.ProjectileCollisionSystem;
 import com.youllknow.game.fighting.projectiles.ProjectileMovementSystem;
 import com.youllknow.game.fighting.projectiles.ProjectileWeapon;
@@ -88,26 +91,34 @@ public class MainGameScreen implements Screen {
 		engine.addSystem(new DeathSystem());
 		Entity player = createPlayer();
 		engine.addEntity(player);
-		Entity popupEnt1 = createSchematicPopup(createShieldSchematic(player), new Rectangle(0, 0, SCREEN_WIDTH / 2, LOWER_UI_HEIGHT));
+		Schematic sheildSchematic = createShieldSchematic(player);
+		Entity popupEnt1 = createSchematicPopup(sheildSchematic, new Rectangle(0, 0, SCREEN_WIDTH / 2, LOWER_UI_HEIGHT));
+		initializePowerFlow(sheildSchematic, popupEnt1.getComponent(SchematicPopup.class));
 		engine.addEntity(popupEnt1);
-		Entity popupEnt2 = createSchematicPopup(createWeaponSchematic(player), new Rectangle(SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, LOWER_UI_HEIGHT / 2));
+		Schematic weaponSchematic = createWeaponSchematic(player);
+		Entity popupEnt2 = createSchematicPopup(weaponSchematic, new Rectangle(SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, LOWER_UI_HEIGHT / 2));
+		PowerFlow weaponPowerFlow = initializePowerFlow(weaponSchematic, popupEnt2.getComponent(SchematicPopup.class));
 		engine.addEntity(popupEnt2);
-		Entity popupEnt3 = createSchematicPopup(createHeatSinkSchematic(player), new Rectangle(SCREEN_WIDTH / 2, LOWER_UI_HEIGHT / 2, SCREEN_WIDTH / 2, LOWER_UI_HEIGHT / 2));
+		Schematic thirdSchematic = createHeatSinkSchematic(player);
+		Entity popupEnt3 = createSchematicPopup(thirdSchematic, new Rectangle(SCREEN_WIDTH / 2, LOWER_UI_HEIGHT / 2, SCREEN_WIDTH / 2, LOWER_UI_HEIGHT / 2));
 		engine.addEntity(popupEnt3);
+		player.getComponent(PlayerWeapon.class).setPowerFlow(weaponPowerFlow);
 //		engine.addEntity(createTargetDummy());
 		engine.addSystem(new EnemySpawningSystem(player));
 	}
 	private Entity createPlayer() {
 		Entity entity = new Entity();
-		PlayerComponent player = new PlayerComponent(game.assets.get(game.MAIN_TEXTURE, Texture.class));
+		Texture mainTexture = game.assets.get(game.MAIN_TEXTURE, Texture.class);
+		PlayerComponent player = new PlayerComponent(mainTexture);
 		WorldDenizen denizen = new WorldDenizen(new Rectangle(0, 0, 50, 50), 10);
 		AttachedWeapon weapon = new AttachedWeapon(entity, 25, 25);
-		ProjectileWeapon projectileWeapon = new ProjectileWeapon(entity, new SingleShotBehavior(DamageType.ENERGY, 5), new NonOwnerTargetbehavior());
+		ProjectileWeapon projectileWeapon = new ProjectileWeapon(entity, new SingleShotBehavior(DamageType.ENERGY, 5), new NonOwnerTargetBehavior());
 		entity.add(player);
 		entity.add(denizen);
 		entity.add(weapon);
 		entity.add(projectileWeapon);
 		entity.add(new HealthComponent(100, new PlayerDeathBehavior()));
+		entity.add(new PlayerWeapon(new TextureRegion(mainTexture, 0, 64, 9, 9)));
 		return entity;
 	}
 	private Entity createSchematicPopup(Schematic diagram, Rectangle area) {
@@ -118,12 +129,15 @@ public class MainGameScreen implements Screen {
 				System.out.println(node.getId());
 			}
 		}, area);
-		PowerFlow powerFlow = new PowerFlow(diagram);
-		powerFlow.calculate();
-		popup.setPowerFlow(powerFlow);
 		popupEnt.add(popup);
 		
 		return popupEnt;
+	}
+	private PowerFlow initializePowerFlow(Schematic diagram, SchematicPopup popup) {
+		PowerFlow powerFlow = new PowerFlow(diagram);
+		powerFlow.calculate();
+		popup.setPowerFlow(powerFlow);
+		return powerFlow;
 	}
 	private Schematic createDebugSchematic() {
 		Schematic diagram = new Schematic();
@@ -162,7 +176,7 @@ public class MainGameScreen implements Screen {
 		diagram.setLocation(subnode11, 0.25f, 3 / 4f);
 		diagram.setLocation(subnode12, 0.25f, 1 / 4f);
 		EnergyNode subnode21 = new LogicEnergyNode(LogicEnergyNode.sameOrNeither);
-		EnergyNode shutOff = new GameStateEnergyInputNode(null, null);
+		EnergyNode shutOff = new GameStateEnergyInputNode(null, new PlayerWeaponSetter(WeaponStat.SHUT_OFF, player));
 		EnergyNode healthLevel = new GameStateEnergyOutputNode(null, new HealthGetter(player));
 		diagram.addNode(subnode21);
 		diagram.addNode(shutOff);
@@ -174,7 +188,7 @@ public class MainGameScreen implements Screen {
 		diagram.setLocation(shutOff, 0.4375f, 0 / 2f);
 		diagram.setLocation(healthLevel, 0.5625f, 0 / 2f);
 		EnergyNode subnode31 = new LogicEnergyNode(LogicEnergyNode.sameOrNeither);
-		EnergyNode fireOrCharge = new GameStateEnergyInputNode(null, null);
+		EnergyNode fireOrCharge = new GameStateEnergyInputNode(null, new PlayerWeaponSetter(WeaponStat.FIRE_CHARGE, player));
 		diagram.addNode(subnode31);
 		diagram.addNode(fireOrCharge);
 		diagram.addWire(subnode21, subnode31);
@@ -182,7 +196,7 @@ public class MainGameScreen implements Screen {
 		diagram.addWire(subnode21, fireOrCharge);
 		diagram.setLocation(subnode31, 0.75f, 1 / 4f);
 		diagram.setLocation(fireOrCharge, 0.75f, 3 / 4f);
-		EnergyNode drainShields = new GameStateEnergyInputNode(null, null);
+		EnergyNode drainShields = new GameStateEnergyInputNode(null, new PlayerWeaponSetter(WeaponStat.DRAIN_SHIELD, player));
 		diagram.addNode(drainShields);
 		diagram.addWire(subnode31, drainShields);
 		diagram.setLocation(drainShields, 1, 1 / 2f);

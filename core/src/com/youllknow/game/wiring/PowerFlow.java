@@ -26,6 +26,9 @@ public class PowerFlow {
 				}
 			}
 		}
+		for (Wire wire : flows.keySet()) {
+			wire.output.handleInput(wire, flows.get(wire));
+		}
 	}
 	private boolean tryToResolve(EnergyNode node) {
 		List<Wire> wires = schematic.getDependencies(node);
