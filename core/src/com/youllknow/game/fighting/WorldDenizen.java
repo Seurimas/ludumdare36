@@ -100,4 +100,18 @@ public class WorldDenizen implements Component {
 	public void setVelocity(Vector2 targetMovement) {
 		velocity.set(targetMovement);
 	}
+	public void translate(float x, int y) {
+		aabb.x += x;
+		aabb.y += y;
+	}
+	public void clamp(float left, float right, float bottom, float top) {
+		if (aabb.x < left)
+			aabb.x = left;
+		else if (aabb.x > right - aabb.width)
+			aabb.x = right - aabb.width;
+		if (aabb.y < bottom)
+			aabb.y = bottom;
+		else if (aabb.y > top - aabb.height)
+			aabb.y = top - aabb.height;
+	}
 }

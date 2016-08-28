@@ -26,6 +26,7 @@ import com.youllknow.game.fighting.enemies.TankAiSystem;
 import com.youllknow.game.fighting.enemies.TankEnemy;
 import com.youllknow.game.fighting.levels.EnemySpawningSystem;
 import com.youllknow.game.fighting.player.AttachedWeaponSystem;
+import com.youllknow.game.fighting.player.PlayerAdvancementSystem;
 import com.youllknow.game.fighting.player.PlayerCameraSystem;
 import com.youllknow.game.fighting.player.PlayerComponent;
 import com.youllknow.game.fighting.player.PlayerDeathBehavior;
@@ -93,6 +94,7 @@ public class MainGameScreen implements Screen {
 		engine.addSystem(new PlayerFlyingSystem());
 		engine.addSystem(new DenizenUpdateSystem());
 //		engine.addSystem(new FlooredGravitySystem());
+		engine.addSystem(new PlayerAdvancementSystem());
 		engine.addSystem(new ProjectileCollisionSystem());
 		engine.addSystem(new TankAiSystem());
 		engine.addSystem(new DeathSystem());

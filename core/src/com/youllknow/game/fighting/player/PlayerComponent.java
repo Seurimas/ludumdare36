@@ -21,6 +21,7 @@ public class PlayerComponent implements Component, DenizenRendererComponent {
 	private float shieldEnergy = 1;
 	private float heatLevel = 0;
 	private float duration = 0;
+	public float screenLeft = 0;
 	private final Texture sprite;
 	public Energy weaponSettings = Energy.RED;
 	public PlayerComponent(Texture texture4Frame) {
