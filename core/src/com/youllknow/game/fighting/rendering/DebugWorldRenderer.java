@@ -24,19 +24,19 @@ public class DebugWorldRenderer extends EntitySystem {
 	}
 	@Override
 	public void update(float deltaTime) {
-		shapes.begin(ShapeType.Filled);
-		shapes.setColor(Color.GREEN);
-		for (WorldDenizen walker : walkers) {
-			shapes.rect(walker.getX(), walker.getY(), walker.getWidth(), walker.getHeight());
-		}
-		shapes.end();
-		shapes.begin(ShapeType.Line);
-		shapes.setColor(Color.RED);
-		for (Projectile projectile : projectiles) {
-			shapes.line(projectile.position.x, projectile.position.y, 
-					projectile.position.x + projectile.velocity.x / 10, 
-					projectile.position.y + projectile.velocity.y / 10);
-		}
-		shapes.end();
+//		shapes.begin(ShapeType.Filled);
+//		shapes.setColor(Color.GREEN);
+//		for (WorldDenizen walker : walkers) {
+//			shapes.rect(walker.getX(), walker.getY(), walker.getWidth(), walker.getHeight());
+//		}
+//		shapes.end();
+//		shapes.begin(ShapeType.Line);
+//		shapes.setColor(Color.RED);
+//		for (Projectile projectile : projectiles) {
+//			shapes.line(projectile.position.x, projectile.position.y, 
+//					projectile.position.x + projectile.velocity.x / 10, 
+//					projectile.position.y + projectile.velocity.y / 10);
+//		}
+//		shapes.end();
 	}
 }

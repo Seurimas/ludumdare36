@@ -8,10 +8,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.youllknow.game.fighting.WorldDenizen;
+import com.youllknow.game.fighting.HealthComponent.DamageStrength;
 import com.youllknow.game.fighting.HealthComponent.DamageType;
 import com.youllknow.game.fighting.projectiles.NonOwnerTargetBehavior;
 import com.youllknow.game.fighting.projectiles.Projectile;
 import com.youllknow.game.fighting.projectiles.behaviors.MultiShotBehavior;
+import com.youllknow.game.fighting.projectiles.rendering.ColorCodedProjectileRenderer;
 import com.youllknow.game.wiring.PowerFlow;
 import com.youllknow.game.wiring.Schematic.EnergyNode.Energy;
 
@@ -72,8 +74,10 @@ public class PlayerWeapon implements Component {
 		temp.scl(-1).add(worldX, worldY);
 		temp.nor().scl(600f);
 //		temp.add(denizen.getVelocity());
-		dummy.add(new Projectile(entity, denizen.getCenter(), temp, new MultiShotBehavior(shotCount, damage > 15 ? DamageType.EXPLOSIVE : DamageType.ENERGY, damage), 
+		DamageType damageType = damage > 15 ? DamageType.EXPLOSIVE : DamageType.ENERGY;
+		dummy.add(new Projectile(entity, denizen.getCenter(), temp, new MultiShotBehavior(shotCount, damageType, damage), 
 				new NonOwnerTargetBehavior().getBehavior(entity)));
+		dummy.add(new ColorCodedProjectileRenderer(damageType.color, DamageStrength.color(damage)));
 		engine.addEntity(dummy);
 	}
 	private void rotateTowards(Entity entity, float worldX, float worldY) {

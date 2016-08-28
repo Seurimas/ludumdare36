@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.youllknow.game.fighting.HealthComponent;
 import com.youllknow.game.fighting.WorldDenizen;
 import com.youllknow.game.fighting.HealthComponent.DamageType;
+import com.youllknow.game.fighting.HealthComponent.DamageStrength;
 import com.youllknow.game.fighting.player.AttachedWeapon;
 import com.youllknow.game.fighting.projectiles.ProjectileWeapon;
 import com.youllknow.game.fighting.projectiles.behaviors.SingleShotBehavior;
@@ -27,7 +28,10 @@ public class TankEnemy implements Component {
 		tank.add(new WorldDenizen(new Rectangle(position.x - WIDTH / 2, position.y, 32, 32), 50));
 		tank.add(new TankEnemy(player));
 		tank.add(new AttachedWeapon(tank, -10, -3));
-		tank.add(new ProjectileWeapon(tank, new SingleShotBehavior(DamageType.EXPLOSIVE, 3), new PlayerOnlyTargetBehaviors()));
+		DamageType damageType = DamageType.EXPLOSIVE;
+		int damageStrength = 3;
+		tank.add(new ProjectileWeapon(tank, new SingleShotBehavior(damageType, damageStrength), new PlayerOnlyTargetBehaviors(),
+				damageType.color, DamageStrength.color(damageStrength)));
 		tank.add(new HealthComponent(10, new ExplosionDeathBehavior()));
 		tank.add(new SimpleSpriteRenderer(sprite));
 		engine.addEntity(tank);

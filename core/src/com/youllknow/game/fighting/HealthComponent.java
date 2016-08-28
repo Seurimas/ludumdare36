@@ -3,12 +3,39 @@ package com.youllknow.game.fighting;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.graphics.Color;
 
 public class HealthComponent implements Component {
 	public enum DamageType {
-		EXPLOSIVE,
-		PROJECTILE,
-		ENERGY;
+		EXPLOSIVE(Color.GREEN),
+		PROJECTILE(Color.RED),
+		ENERGY(Color.BLUE);
+		public Color color;
+		DamageType(Color color) {
+			this.color = color;
+		}
+	}
+	public enum DamageStrength {
+		LOW(5, Color.BLUE),
+		MEDIUM(15, Color.GREEN),
+		HIGH(1000, Color.RED);
+		float max;
+		Color color;
+		DamageStrength(float value, Color color) {
+			this.max = value;
+			this.color = color;
+		}
+		public static Color color(float value) {
+			return forDamage(value).color;
+		}
+		public static DamageStrength forDamage(float value) {
+			if (value <= LOW.max)
+				return LOW;
+			else if (value <= MEDIUM.max)
+				return MEDIUM;
+			else
+				return HIGH;
+		}
 	}
 	public static interface DeathBehavior {
 		public void onDeath(Engine engine, Entity entity);

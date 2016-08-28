@@ -49,6 +49,8 @@ import com.youllknow.game.fighting.projectiles.ProjectileCollisionSystem;
 import com.youllknow.game.fighting.projectiles.ProjectileMovementSystem;
 import com.youllknow.game.fighting.projectiles.ProjectileWeapon;
 import com.youllknow.game.fighting.projectiles.behaviors.SingleShotBehavior;
+import com.youllknow.game.fighting.projectiles.rendering.ColorCodedProjectileRenderer;
+import com.youllknow.game.fighting.projectiles.rendering.ProjectileRenderer;
 import com.youllknow.game.fighting.rendering.BackdropRenderer;
 import com.youllknow.game.fighting.rendering.DebugWorldRenderer;
 import com.youllknow.game.fighting.rendering.DenizenRenderer;
@@ -79,6 +81,7 @@ public class MainGameScreen implements Screen {
 		this.engine = new Engine();
 		Texture mainTexture = game.assets.get(game.MAIN_TEXTURE, Texture.class);
 		IconManager.setTexture(mainTexture);
+		ColorCodedProjectileRenderer.setTexture(mainTexture);
 		setupEngine();
 		TankEnemy.setSprite(new TextureRegion(mainTexture, 0, 32, 32, 32));
 	}
@@ -94,6 +97,7 @@ public class MainGameScreen implements Screen {
 				new Rectangle(SCREEN_WIDTH / 2, LOWER_UI_HEIGHT - 25, SCREEN_WIDTH / 2, 25)));
 		engine.addSystem(new DebugWorldRenderer(game.batch, game.shapes));
 		engine.addSystem(new DenizenRenderer(game.batch));
+		engine.addSystem(new ProjectileRenderer(game.batch));
 		engine.addSystem(new SchematicInputSystem(game.input));
 		engine.addSystem(new PlayerShootingSystem(game.input));
 		engine.addSystem(new AttachedWeaponSystem());
@@ -127,12 +131,12 @@ public class MainGameScreen implements Screen {
 		Texture mainTexture = game.assets.get(game.MAIN_TEXTURE, Texture.class);
 		PlayerComponent player = new PlayerComponent(mainTexture);
 		WorldDenizen denizen = new WorldDenizen(new Rectangle(0, 0, 50, 50), 10);
-		AttachedWeapon weapon = new AttachedWeapon(entity, 25, 25);
-		ProjectileWeapon projectileWeapon = new ProjectileWeapon(entity, new SingleShotBehavior(DamageType.ENERGY, 5), new NonOwnerTargetBehavior());
+//		AttachedWeapon weapon = new AttachedWeapon(entity, 25, 25);
+//		ProjectileWeapon projectileWeapon = new ProjectileWeapon(entity, new SingleShotBehavior(DamageType.ENERGY, 5), new NonOwnerTargetBehavior());
 		entity.add(player);
 		entity.add(denizen);
-		entity.add(weapon);
-		entity.add(projectileWeapon);
+//		entity.add(weapon);
+//		entity.add(projectileWeapon);
 		entity.add(new HealthComponent(100, new PlayerDeathBehavior()));
 		entity.add(new PlayerWeapon(new TextureRegion(mainTexture, 0, 64, 9, 9)));
 		return entity;
