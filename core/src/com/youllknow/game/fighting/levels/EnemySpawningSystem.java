@@ -13,11 +13,25 @@ import com.youllknow.game.fighting.enemies.TankEnemy;
 import com.youllknow.game.fighting.player.PlayerComponent;
 
 public class EnemySpawningSystem extends EntitySystem {
+	private static final float INTRO_LENGTH = 50 * 60;
+	private static final class IntroLevel implements Level {
+
+		@Override
+		public boolean spawn(Engine engine, Entity player, float currentTime, float x) {
+			return false;
+		}
+
+		@Override
+		public boolean finished(float x) {
+			return x > INTRO_LENGTH;
+		}
+		
+	}
 	private static final class HelicopterLevel implements Level {
 		float lastSpawn = 0;
 		float spawnInterval = 2;
 		float maxSpawnInterval = 15;
-		int finishedAt = 2000;
+		float finishedAt = INTRO_LENGTH + 2000;
 
 		@Override
 		public boolean spawn(Engine engine, Entity player, float currentTime, float x) {
@@ -49,7 +63,7 @@ public class EnemySpawningSystem extends EntitySystem {
 		float lastSpawn = 0;
 		float spawnInterval = 2;
 		float maxSpawnInterval = 12;
-		int finishedAt = 1000;
+		float finishedAt = INTRO_LENGTH + 1000;
 
 		@Override
 		public boolean spawn(Engine engine, Entity player, float currentTime, float x) {
@@ -81,10 +95,11 @@ public class EnemySpawningSystem extends EntitySystem {
 		public boolean spawn(Engine engine, Entity player, float currentTime, float x);
 		public boolean finished(float x);
 	}
+	public static final IntroLevel introLevel = new IntroLevel();
 	public static final TankLevel tankLevel = new TankLevel();
 	public static final HelicopterLevel helicopterLevel = new HelicopterLevel();
 	private final Entity player;
-	private Level level = tankLevel;
+	private Level level = introLevel;
 	private float timeElapsed = 0;
 	int siloSpawnChance = 0;
 	int siloSpawnMax = 5;
@@ -107,7 +122,9 @@ public class EnemySpawningSystem extends EntitySystem {
 			advance();
 	}
 	private void advance() {
-		if (level == tankLevel)
+		if (level == introLevel)
+			level = tankLevel;
+		else if (level == tankLevel)
 			level = helicopterLevel;
 		else if (level == helicopterLevel) {
 			tankLevel.levelUp();

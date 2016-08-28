@@ -1,4 +1,4 @@
-package com.youllknow.game;
+package com.youllknow.game.fighting.player;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
@@ -8,8 +8,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.youllknow.game.fighting.HealthComponent;
-import com.youllknow.game.fighting.player.PlayerComponent;
-import com.youllknow.game.fighting.player.PlayerWeapon;
 
 public class HealthHeatShieldRenderer extends EntitySystem {
 	private final Entity player;
