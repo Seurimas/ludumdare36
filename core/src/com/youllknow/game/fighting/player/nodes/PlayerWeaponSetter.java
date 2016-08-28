@@ -36,4 +36,18 @@ public class PlayerWeaponSetter extends PlayerStatSetter {
 		}
 	}
 
+	@Override
+	public String getDescription() {
+		switch (statType) {
+		case DRAIN_SHIELD:
+			return "Blue energy drains the shield for extra power. Red energy diverts power to shields.";
+		case FIRE_CHARGE:
+			return "Green energy diverts power to reserves. Red energy takes power from reserves.";
+		case SHUT_OFF:
+			return "Red energy stops weapons from firing. Blue energy is heat efficient.";
+		default:
+			return "???";
+		}
+	}
+
 }

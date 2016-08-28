@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -25,6 +26,8 @@ import com.youllknow.game.fighting.enemies.DeathSystem;
 import com.youllknow.game.fighting.enemies.ExplosionDeathBehavior;
 import com.youllknow.game.fighting.enemies.HelicopterAiSystem;
 import com.youllknow.game.fighting.enemies.HelicopterEnemy;
+import com.youllknow.game.fighting.enemies.SiloAiSystem;
+import com.youllknow.game.fighting.enemies.SiloEnemy;
 import com.youllknow.game.fighting.enemies.TankAiSystem;
 import com.youllknow.game.fighting.enemies.TankEnemy;
 import com.youllknow.game.fighting.levels.EnemySpawningSystem;
@@ -63,6 +66,7 @@ import com.youllknow.game.fighting.rendering.DebugWorldRenderer;
 import com.youllknow.game.fighting.rendering.DenizenRenderer;
 import com.youllknow.game.fighting.rendering.DenizenRendererComponent;
 import com.youllknow.game.fighting.world.FlooredGravitySystem;
+import com.youllknow.game.utils.TooltipManager;
 import com.youllknow.game.wiring.PowerFlow;
 import com.youllknow.game.wiring.Schematic;
 import com.youllknow.game.wiring.Schematic.EnergyNode;
@@ -71,6 +75,7 @@ import com.youllknow.game.wiring.SchematicInputSystem;
 import com.youllknow.game.wiring.SchematicPopup;
 import com.youllknow.game.wiring.SchematicPopup.SchematicInputBehavior;
 import com.youllknow.game.wiring.SchematicRenderer;
+import com.youllknow.game.wiring.TooltipSystem;
 import com.youllknow.game.wiring.nodes.LogicEnergyNode;
 
 public class MainGameScreen implements Screen {
@@ -92,21 +97,26 @@ public class MainGameScreen implements Screen {
 		setupEngine();
 		TankEnemy.setSprite(new TextureRegion(mainTexture, 0, 32, 32, 32));
 		HelicopterEnemy.setSprite(new TextureRegion(mainTexture, 32, 32, 32, 32));
+		SiloEnemy.setSprite(new TextureRegion(mainTexture, 0, 96, 32, 32));
 	}
 	private void setupEngine() {
+		TooltipManager tooltips = new TooltipManager();
 		Entity player = createPlayer();
 		engine.addEntity(player);
 		Texture mainTexture = game.assets.get(game.MAIN_TEXTURE, Texture.class);
 		engine.addSystem(new PlayerCameraSystem(camera));
 		engine.addSystem(new BackdropRenderer(game.batch, viewport, mainTexture));
 		engine.addSystem(new SchematicRenderer(game.uiShapes, game.uiBatch));
+		Rectangle healthArea = new Rectangle(0, LOWER_UI_HEIGHT - 25, SCREEN_WIDTH / 2, 25);
+		Rectangle heatArea = new Rectangle(SCREEN_WIDTH / 2, LOWER_UI_HEIGHT - 25, SCREEN_WIDTH / 2, 25);
 		engine.addSystem(new HealthHeatShieldRenderer(player, game.uiShapes, game.uiBatch,
-				new Rectangle(0, LOWER_UI_HEIGHT - 25, SCREEN_WIDTH / 2, 25), 
-				new Rectangle(SCREEN_WIDTH / 2, LOWER_UI_HEIGHT - 25, SCREEN_WIDTH / 2, 25)));
+				healthArea, heatArea));
+		Rectangle tooltipArea = new Rectangle(64, SCREEN_HEIGHT - 96, SCREEN_WIDTH - 128, 64);
+		engine.addSystem(new TooltipSystem(game.uiBatch, game.uiShapes, new BitmapFont(), tooltipArea, tooltips));
 		engine.addSystem(new DebugWorldRenderer(game.batch, game.shapes));
 		engine.addSystem(new DenizenRenderer(game.batch));
 		engine.addSystem(new ProjectileRenderer(game.batch));
-		engine.addSystem(new SchematicInputSystem(game.input));
+		engine.addSystem(new SchematicInputSystem(game.input, tooltips));
 		engine.addSystem(new PlayerShootingSystem(game.input));
 		engine.addSystem(new AttachedWeaponSystem());
 		engine.addSystem(new ProjectileMovementSystem());
@@ -117,6 +127,7 @@ public class MainGameScreen implements Screen {
 		engine.addSystem(new ProjectileCollisionSystem());
 		engine.addSystem(new TankAiSystem());
 		engine.addSystem(new HelicopterAiSystem());
+		engine.addSystem(new SiloAiSystem());
 		engine.addSystem(new DeathSystem());
 		engine.addSystem(new ShieldSystem());
 		setupWiring(player);

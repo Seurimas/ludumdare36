@@ -14,5 +14,8 @@ public class WeaponSettingsGetter extends PlayerStatGetter {
 	public Energy getValue() {
 		return player.getComponent(PlayerComponent.class).weaponSettings;
 	}
-
+	@Override
+	public String getDescription() {
+		return "Outputs the set weapon energy.";
+	}
 }

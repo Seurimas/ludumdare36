@@ -21,4 +21,9 @@ public class MatchHeatSetter extends PlayerStatSetter implements GameStateSetter
 		}
 	}
 
+	@Override
+	public String getDescription() {
+		return "If the color matches the output of the Heat node, gain shield, generate heat, and trigger shield.";
+	}
+
 }

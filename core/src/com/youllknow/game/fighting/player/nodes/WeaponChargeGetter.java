@@ -20,5 +20,8 @@ public class WeaponChargeGetter extends PlayerStatGetter {
 		else
 			return Energy.RED;
 	}
-
+	@Override
+	public String getDescription() {
+		return "Blue for low reserves. Green for medium reserves. Red for high reserves.";
+	}
 }

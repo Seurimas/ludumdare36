@@ -30,7 +30,7 @@ public class HelicopterEnemy implements Component {
 		helicopter.add(new AttachedWeapon(helicopter, -10, -3));
 		DamageType damageType = DamageType.PROJECTILE;
 		int damageStrength = 2;
-		helicopter.add(new ProjectileWeapon(helicopter, new SingleShotBehavior(damageType, damageStrength), new PlayerOnlyTargetBehaviors(),
+		helicopter.add(new ProjectileWeapon(helicopter, 800, new SingleShotBehavior(damageType, damageStrength), new PlayerOnlyTargetBehaviors(),
 				damageType.color, DamageStrength.color(damageStrength)));
 		helicopter.add(new HealthComponent(10, new ExplosionDeathBehavior()));
 		helicopter.add(new SimpleSpriteRenderer(sprite));

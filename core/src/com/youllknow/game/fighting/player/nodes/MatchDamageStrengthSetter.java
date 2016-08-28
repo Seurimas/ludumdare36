@@ -19,4 +19,9 @@ public class MatchDamageStrengthSetter extends PlayerStatSetter implements GameS
 		}
 	}
 
+	@Override
+	public String getDescription() {
+		return "If the color matches the output of the Damage Strength node, gain 1/8 shield power.";
+	}
+
 }

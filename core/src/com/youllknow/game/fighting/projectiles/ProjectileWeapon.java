@@ -15,14 +15,16 @@ public class ProjectileWeapon implements Component {
 	public static interface TargetBehaviorFactory {
 		public TargetBehavior getBehavior(Entity shooter);
 	}
+	private final float speed;
 	public final Vector2 source = new Vector2();
 	private final Entity owner;
 	private final Projectile.HitBehavior behavior;
 	private final TargetBehaviorFactory targetFactory;
 	private final ProjectileRendererComponent renderer;
-	public ProjectileWeapon(Entity owner, Projectile.HitBehavior projectileBehavior,
+	public ProjectileWeapon(Entity owner, float speed, Projectile.HitBehavior projectileBehavior,
 			TargetBehaviorFactory targetFactory, Color shell, Color payload) {
 		this.owner = owner;
+		this.speed = speed;
 		this.behavior = projectileBehavior;
 		this.targetFactory = targetFactory;
 		this.renderer = new ColorCodedProjectileRenderer(shell, payload);
@@ -31,7 +33,7 @@ public class ProjectileWeapon implements Component {
 	public void fire(Engine engine, Entity entity, float worldX, float worldY) {
 		Entity dummy = new Entity();
 		temp.set(worldX - source.x, worldY - source.y);
-		temp.setLength(800);
+		temp.setLength(speed);
 		dummy.add(new Projectile(owner, source, temp, behavior, targetFactory.getBehavior(owner)));
 		dummy.add(renderer);
 		engine.addEntity(dummy);

@@ -8,6 +8,7 @@ import com.youllknow.game.wiring.nodes.RegisteredEnergyNode;
 public class GameStateEnergyOutputNode extends RegisteredEnergyNode {
 	public static interface GameStateGetter {
 		public Energy getValue();
+		public String getDescription();
 	}
 	private final Color color;
 	private final TextureRegion sprite;
@@ -38,6 +39,10 @@ public class GameStateEnergyOutputNode extends RegisteredEnergyNode {
 	@Override
 	public Color getColor() {
 		return color;
+	}
+	@Override
+	public String getTooltip() {
+		return String.format("This node outputs energy as follows: %s", gameState.getDescription());
 	}
 
 }

@@ -27,5 +27,8 @@ public class DamageTypeGetter extends PlayerStatGetter {
 			return Energy.GREEN;
 		}
 	}
-
+	@Override
+	public String getDescription() {
+		return "Blue for energy attacks. Red for explosive attacks. Green for projectile attacks.";
+	}
 }

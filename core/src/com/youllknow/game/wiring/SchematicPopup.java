@@ -103,7 +103,7 @@ public class SchematicPopup implements Component {
 		for (EnergyNode node : baseDiagram.getNodes()) {
 			temp3.set(baseDiagram.getLocation(node));
 			scaleToBounds(temp3);
-			if (temp3.dst(mouseX, mouseY) < nodeScale)
+			if (temp3.dst(mouseX, mouseY) < nodeScale * 2)
 				return node;
 		}
 		return null;

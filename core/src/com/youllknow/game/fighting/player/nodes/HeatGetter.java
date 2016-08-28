@@ -24,5 +24,10 @@ public class HeatGetter extends PlayerStatGetter {
 		else
 			return Energy.RED;
 	}
+	
+	@Override
+	public String getDescription() {
+		return "Blue for low heat. Green for medium heat. Red for high heat.";
+	}
 
 }

@@ -27,7 +27,7 @@ public class HelicopterAiSystem extends ComponentSystem<HelicopterEnemy> {
 		} else if (distanceToPlayer > 600) {
 			helicopterMovement.x = -300f;
 		}
-		if (distanceToPlayer < MainGameScreen.SCREEN_WIDTH - 400) {
+		if (Math.abs(distanceToPlayer) < MainGameScreen.SCREEN_WIDTH - 400) {
 			if (mainComponent.canFire()) {
 				mainComponent.fire(engine, entity, playerDenizen.getCenter());
 				heliDenizen.applyImpulse(new Vector2(0, MathUtils.random(-1, 1) * 1000));

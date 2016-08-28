@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import com.youllknow.game.fighting.WorldDenizen;
+import com.youllknow.game.fighting.projectiles.ProjectileWeapon;
 
 public class AttachedWeapon implements Component {
 	private final Entity player;
@@ -13,10 +14,10 @@ public class AttachedWeapon implements Component {
 		this.xOffset = xOffset;
 		this.yOffset = yOffset;
 	}
-	public void moveSource(Vector2 source) {
+	public void moveSource(ProjectileWeapon weapon) {
 		WorldDenizen denizen = player.getComponent(WorldDenizen.class);
-		source.set(denizen.getCenter());
-		source.add(xOffset, yOffset);
+		weapon.source.set(denizen.getCenter());
+		weapon.source.add(xOffset, yOffset);
 	}
 
 }

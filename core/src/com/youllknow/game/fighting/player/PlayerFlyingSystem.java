@@ -33,10 +33,12 @@ public class PlayerFlyingSystem extends EntitySystem {
 		}
 		for (Entity player : getEngine().getEntitiesFor(entityFamily)) {
 			WorldDenizen walker = player.getComponent(WorldDenizen.class);
+			PlayerComponent playerComponent = player.getComponent(PlayerComponent.class);
 			if (targetMovement.isZero()) {
-				player.getComponent(PlayerComponent.class).walking = false;
+				playerComponent.walking = false;
 			} else {
-				player.getComponent(PlayerComponent.class).walking = true;
+				playerComponent.walking = true;
+				playerComponent.heatUp(0.01f * deltaTime);
 			}
 			walker.setVelocity(targetMovement);
 		}

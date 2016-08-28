@@ -13,6 +13,7 @@ public class LogicEnergyNode extends RegisteredEnergyNode {
 		public Energy getOutput(Energy input1, Energy input2);
 		public Color getColor();
 		public TextureRegion getSprite();
+		public String getTooltip();
 	}
 	public static final Logic sameOrNeither = new Logic() {
 		public Energy getOutput(Energy input1, Energy input2) {
@@ -35,7 +36,11 @@ public class LogicEnergyNode extends RegisteredEnergyNode {
 		public TextureRegion getSprite() {
 			return IconManager.getLogicIcon();
 		}
+		public String getTooltip() {
+			return "If both values are the same, output that value. Otherwise, output neither value.";
+		};
 	};
+	private static final String oddFormat = "If both values are different, output %s. Otherwise, output %s.";
 	public static final Logic oddBlue = new Logic() {
 		public Energy getOutput(Energy input1, Energy input2) {
 			if (input1 == input2)
@@ -50,11 +55,15 @@ public class LogicEnergyNode extends RegisteredEnergyNode {
 		public TextureRegion getSprite() {
 			return IconManager.getLogicIcon();
 		}
+		@Override
+		public String getTooltip() {
+			return String.format(oddFormat, "Blue", "Green");
+		}
 	};
 	public static final Logic oddRed = new Logic() {
 		public Energy getOutput(Energy input1, Energy input2) {
 			if (input1 == input2)
-				return Energy.GREEN;
+				return Energy.BLUE;
 			else
 				return Energy.RED;
 		};
@@ -65,7 +74,31 @@ public class LogicEnergyNode extends RegisteredEnergyNode {
 		public TextureRegion getSprite() {
 			return IconManager.getLogicIcon();
 		}
+		@Override
+		public String getTooltip() {
+			return String.format(oddFormat, "Red", "Blue");
+		}
 	};
+	public static final Logic oddGreen = new Logic() {
+		public Energy getOutput(Energy input1, Energy input2) {
+			if (input1 == input2)
+				return Energy.RED;
+			else
+				return Energy.GREEN;
+		};
+		public Color getColor() {
+			return Color.GREEN;
+		}
+		@Override
+		public TextureRegion getSprite() {
+			return IconManager.getLogicIcon();
+		}
+		@Override
+		public String getTooltip() {
+			return String.format(oddFormat, "Green", "Red");
+		}
+	};
+	private static final String anyFormat = "Output %s if input at all. Otherwise, output %s.";
 	public static final Logic anyRed = new Logic() {
 		public Energy getOutput(Energy input1, Energy input2) {
 			if (input1.equals(Energy.RED) || input2.equals(Energy.RED))
@@ -79,6 +112,10 @@ public class LogicEnergyNode extends RegisteredEnergyNode {
 		@Override
 		public TextureRegion getSprite() {
 			return IconManager.getLogicIconInverted();
+		}
+		@Override
+		public String getTooltip() {
+			return String.format(anyFormat, "Red", "Blue");
 		}
 	};
 	public static final Logic anyGreen = new Logic() {
@@ -95,6 +132,10 @@ public class LogicEnergyNode extends RegisteredEnergyNode {
 		public TextureRegion getSprite() {
 			return IconManager.getLogicIconInverted();
 		}
+		@Override
+		public String getTooltip() {
+			return String.format(anyFormat, "Green", "Red");
+		}
 	};
 	public static final Logic anyBlue = new Logic() {
 		public Energy getOutput(Energy input1, Energy input2) {
@@ -110,11 +151,15 @@ public class LogicEnergyNode extends RegisteredEnergyNode {
 		public TextureRegion getSprite() {
 			return IconManager.getLogicIconInverted();
 		}
+		@Override
+		public String getTooltip() {
+			return String.format(anyFormat, "Blue", "Green");
+		}
 	};
 	private static final Logic[] logics = new Logic[] {
 			sameOrNeither,
 			oddBlue,
-//			oddGreen,
+			oddGreen,
 			oddRed,
 			anyBlue,
 			anyGreen,
@@ -155,5 +200,9 @@ public class LogicEnergyNode extends RegisteredEnergyNode {
 			}
 		}
 		logic = logics[0];
+	}
+	@Override
+	public String getTooltip() {
+		return String.format("This is a logic node. It's output is based on the inputs: %s", logic.getTooltip());
 	}
 }

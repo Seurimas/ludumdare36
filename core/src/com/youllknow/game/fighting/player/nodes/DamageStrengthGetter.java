@@ -23,5 +23,9 @@ public class DamageStrengthGetter extends PlayerStatGetter {
 			return Energy.RED;
 		}
 	}
+	@Override
+	public String getDescription() {
+		return "Blue for weak attacks. Green for medium attacks. Red for strong attacks.";
+	}
 
 }

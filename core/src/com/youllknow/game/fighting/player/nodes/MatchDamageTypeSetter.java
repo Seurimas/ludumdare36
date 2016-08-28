@@ -19,4 +19,9 @@ public class MatchDamageTypeSetter extends PlayerStatSetter implements GameState
 		}
 	}
 
+	@Override
+	public String getDescription() {
+		return "If the color matches the output of the Damage Type node, gain 1/8 shield power.";
+	}
+
 }

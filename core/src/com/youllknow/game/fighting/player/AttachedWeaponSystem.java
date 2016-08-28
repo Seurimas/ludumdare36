@@ -17,6 +17,6 @@ public class AttachedWeaponSystem extends ComponentSystem<AttachedWeapon> {
 	@Override
 	public void update(Engine engine, Entity entity, AttachedWeapon mainComponent, float delta) {
 		ProjectileWeapon weapon = entity.getComponent(ProjectileWeapon.class);
-		mainComponent.moveSource(weapon.source);
+		mainComponent.moveSource(weapon);
 	}
 }

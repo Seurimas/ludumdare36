@@ -22,5 +22,8 @@ public class HealthGetter extends PlayerStatGetter {
 			return Energy.BLUE;
 		}
 	}
-
+	@Override
+	public String getDescription() {
+		return "Red for low health. Green for medium health. Blue for high health.";
+	}
 }
