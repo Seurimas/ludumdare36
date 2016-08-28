@@ -48,6 +48,10 @@ public class PlayerWeapon implements Component {
 		PlayerComponent playerComponent = entity.getComponent(PlayerComponent.class);
 		if (shutOffEnergy.equals(Energy.RED)) {
 			return;
+		} else if (shutOffEnergy.equals(Energy.BLUE)) {
+			playerComponent.heatUp(0.0025f);
+		} else if (shutOffEnergy.equals(Energy.GREEN)) {
+			playerComponent.heatUp(0.005f);
 		}
 		float extraStrength = 0;
 		if (drainEnergy.equals(Energy.BLUE)) {
@@ -82,12 +86,8 @@ public class PlayerWeapon implements Component {
 		temp.set(denizen.getCenter());
 		temp.scl(-1).add(worldX, worldY);
 		temp.nor().scl(600f);
+		temp.rotate((shotCount - 1) / 2 * -30);
 		for (int i = 0;i < shotCount;i++) {
-			if (shutOffEnergy.equals(Energy.BLUE)) {
-				playerComponent.heatUp(0.0025f);
-			} else if (shutOffEnergy.equals(Energy.GREEN)) {
-				playerComponent.heatUp(0.005f);
-			}
 			Entity dummy = new Entity();
 			dummy.add(new Projectile(entity, denizen.getCenter(), temp, new SingleShotBehavior(damageType, damage), 
 					new NonOwnerTargetBehavior().getBehavior(entity)));
