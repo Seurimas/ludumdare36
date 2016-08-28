@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.youllknow.game.fighting.rendering.DenizenRenderer;
 import com.youllknow.game.fighting.rendering.DenizenRendererComponent;
+import com.youllknow.game.wiring.Schematic.EnergyNode.Energy;
 
 public class PlayerComponent implements Component, DenizenRendererComponent {
 	private static final float VERTICAL_FRAMES_IN_SHEET = 2f;
@@ -15,10 +16,38 @@ public class PlayerComponent implements Component, DenizenRendererComponent {
 		DenizenRenderer.addRenderer(PlayerComponent.class);
 	}
 	public boolean walking = false;
+	private float heatLevel = 0;
 	private float duration = 0;
 	private final Texture sprite;
+	public Energy weaponSettings = Energy.RED;
 	public PlayerComponent(Texture texture4Frame) {
 		sprite = texture4Frame;
+	}
+	public void heatUp(float amount) {
+		heatLevel += amount;
+	}
+	public void coolDown(float amount) {
+		heatLevel -= amount;
+	}
+	public float getHeatLevel() {
+		return heatLevel;
+	}
+	public void toggleWeaponSettings() {
+		switch (weaponSettings) {
+		case BLUE:
+			weaponSettings = Energy.BLUE;
+			break;
+		case GREEN:
+			weaponSettings = Energy.RED;
+			break;
+		case RED:
+			weaponSettings = Energy.GREEN;
+			break;
+		default:
+			weaponSettings = Energy.RED;
+			break;
+		
+		}
 	}
 	public void draw(Batch batch, Rectangle area, float deltaTime) {
 		int frame = 0;
