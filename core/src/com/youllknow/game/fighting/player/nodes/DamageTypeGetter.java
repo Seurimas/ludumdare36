@@ -12,7 +12,11 @@ public class DamageTypeGetter extends PlayerStatGetter {
 
 	@Override
 	public Energy getValue() {
-		switch (player.getComponent(HealthComponent.class).getLastDamageType()) {
+		return getDamageTypeEnergy(player);
+	}
+
+	public static Energy getDamageTypeEnergy(Entity entity) {
+		switch (entity.getComponent(HealthComponent.class).getLastDamageType()) {
 		case ENERGY:
 			return Energy.BLUE;
 		case EXPLOSIVE:

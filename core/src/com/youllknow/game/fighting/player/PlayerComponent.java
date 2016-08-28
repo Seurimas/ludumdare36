@@ -19,6 +19,7 @@ public class PlayerComponent implements Component, DenizenRendererComponent {
 	}
 	public boolean walking = false;
 	private float shieldEnergy = 1;
+	private float shieldProgress = 0;
 	private float heatLevel = 0;
 	private float duration = 0;
 	public float screenLeft = 0;
@@ -71,5 +72,32 @@ public class PlayerComponent implements Component, DenizenRendererComponent {
 		float temp = shieldEnergy;
 		shieldEnergy = 0;
 		return MathUtils.clamp(temp, 0, 1);
+	}
+	public void updateShield(float deltaTime) {
+		shieldProgress += deltaTime;
+	}
+	private final float SHIELD_TRIGGER = 0.125f;
+	public boolean triggerShield() {
+		if (shieldProgress > 1) {
+			shieldProgress = 0;
+			return true;
+		}
+		return false;
+	}
+	public float drainShieldByTrigger() {
+		if (shieldEnergy >= SHIELD_TRIGGER) {
+			shieldEnergy -= SHIELD_TRIGGER;
+			return SHIELD_TRIGGER;
+		} else {
+			return drainShield();
+		}
+	}
+	public void shieldUp(float gainedShield) {
+		shieldEnergy += gainedShield;
+		if (shieldEnergy > 1)
+			shieldEnergy = 1;
+	}
+	public float getShieldPercent() {
+		return shieldEnergy;
 	}
 }

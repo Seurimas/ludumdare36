@@ -11,7 +11,10 @@ public class DamageStrengthGetter extends PlayerStatGetter {
 	}
 	@Override
 	public Energy getValue() {
-		int damageClass = (int)(player.getComponent(HealthComponent.class).getLastDamage() / 5);
+		return getDamageStrengthEnergy(player);
+	}
+	public static Energy getDamageStrengthEnergy(Entity entity) {
+		int damageClass = (int)(entity.getComponent(HealthComponent.class).getLastDamage() / 5);
 		if (damageClass <= 1) {
 			return Energy.BLUE;
 		} else if (damageClass <= 3) {

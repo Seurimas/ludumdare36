@@ -40,8 +40,12 @@ public class HealthComponent implements Component {
 	public static interface DeathBehavior {
 		public void onDeath(Engine engine, Entity entity);
 	}
+	public static interface DamageListener {
+		public boolean onDamage(DamageType type, float damage);
+	}
 	private float maxHealth;
 	private final DeathBehavior behavior;
+	private DamageListener listener;
 	private float currentHealth;
 	private DamageType lastDamageType = DamageType.ENERGY;
 	private float lastDamage = 0;
@@ -50,10 +54,15 @@ public class HealthComponent implements Component {
 		currentHealth = maxHealth;
 		this.behavior = behavior;
 	}
+	public void setListener(DamageListener listener) {
+		this.listener = listener;
+	}
 	public void damage(DamageType type, float damage) {
 		currentHealth -= damage;
 		lastDamage = damage;
 		lastDamageType = type;
+		if (listener != null)
+			listener.onDamage(type, damage);
 	}
 	public float getHealth() {
 		return currentHealth;
@@ -69,6 +78,11 @@ public class HealthComponent implements Component {
 	}
 	public float getHealthPercent() {
 		return currentHealth / maxHealth;
+	}
+	public void heal(float heal) {
+		currentHealth += heal;
+		if (currentHealth > maxHealth)
+			currentHealth = maxHealth;
 	}
 
 }

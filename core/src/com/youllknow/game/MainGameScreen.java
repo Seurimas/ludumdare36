@@ -35,10 +35,15 @@ import com.youllknow.game.fighting.player.PlayerFlyingSystem;
 import com.youllknow.game.fighting.player.PlayerShootingSystem;
 import com.youllknow.game.fighting.player.PlayerWalkingSystem;
 import com.youllknow.game.fighting.player.PlayerWeapon;
+import com.youllknow.game.fighting.player.ShieldDamageListener;
+import com.youllknow.game.fighting.player.ShieldSystem;
 import com.youllknow.game.fighting.player.nodes.DamageStrengthGetter;
 import com.youllknow.game.fighting.player.nodes.DamageTypeGetter;
 import com.youllknow.game.fighting.player.nodes.HealthGetter;
 import com.youllknow.game.fighting.player.nodes.HeatGetter;
+import com.youllknow.game.fighting.player.nodes.MatchDamageStrengthSetter;
+import com.youllknow.game.fighting.player.nodes.MatchDamageTypeSetter;
+import com.youllknow.game.fighting.player.nodes.MatchHeatSetter;
 import com.youllknow.game.fighting.player.nodes.PlayerWeaponSetter;
 import com.youllknow.game.fighting.player.nodes.WeaponChargeGetter;
 import com.youllknow.game.fighting.player.nodes.WeaponSettingsGetter;
@@ -92,7 +97,7 @@ public class MainGameScreen implements Screen {
 		engine.addSystem(new PlayerCameraSystem(camera));
 		engine.addSystem(new BackdropRenderer(game.batch, viewport, mainTexture));
 		engine.addSystem(new SchematicRenderer(game.uiShapes, game.uiBatch));
-		engine.addSystem(new HealthHeatRenderer(player, game.uiShapes, game.uiBatch,
+		engine.addSystem(new HealthHeatShieldRenderer(player, game.uiShapes, game.uiBatch,
 				new Rectangle(0, LOWER_UI_HEIGHT - 25, SCREEN_WIDTH / 2, 25), 
 				new Rectangle(SCREEN_WIDTH / 2, LOWER_UI_HEIGHT - 25, SCREEN_WIDTH / 2, 25)));
 		engine.addSystem(new DebugWorldRenderer(game.batch, game.shapes));
@@ -109,13 +114,14 @@ public class MainGameScreen implements Screen {
 		engine.addSystem(new ProjectileCollisionSystem());
 		engine.addSystem(new TankAiSystem());
 		engine.addSystem(new DeathSystem());
+		engine.addSystem(new ShieldSystem());
 		setupWiring(player);
 		engine.addSystem(new EnemySpawningSystem(player));
 	}
 	private void setupWiring(Entity player) {
 		Schematic sheildSchematic = createShieldSchematic(player);
 		Entity popupEnt1 = createSchematicPopup(sheildSchematic, new Rectangle(0, 0, SCREEN_WIDTH / 2, LOWER_UI_HEIGHT - 25));
-		initializePowerFlow(sheildSchematic, popupEnt1.getComponent(SchematicPopup.class));
+		PowerFlow shieldPowerFlow = initializePowerFlow(sheildSchematic, popupEnt1.getComponent(SchematicPopup.class));
 		engine.addEntity(popupEnt1);
 		Schematic weaponSchematic = createWeaponSchematic(player);
 		Entity popupEnt2 = createSchematicPopup(weaponSchematic, new Rectangle(SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, LOWER_UI_HEIGHT - 25));
@@ -125,6 +131,7 @@ public class MainGameScreen implements Screen {
 //		Entity popupEnt3 = createSchematicPopup(thirdSchematic, new Rectangle(SCREEN_WIDTH / 2, LOWER_UI_HEIGHT / 2, SCREEN_WIDTH / 2, LOWER_UI_HEIGHT / 2));
 //		engine.addEntity(popupEnt3);
 		player.getComponent(PlayerWeapon.class).setPowerFlow(weaponPowerFlow);
+		player.getComponent(HealthComponent.class).setListener(new ShieldDamageListener(shieldPowerFlow));
 	}
 	private Entity createPlayer() {
 		Entity entity = new Entity();
@@ -251,18 +258,8 @@ public class MainGameScreen implements Screen {
 		diagram.setLocation(subnode21, 0.5f, 4f / 6);
 		diagram.setLocation(subnode22, 0.5f, 2f / 6);
 		EnergyNode subnode31 = new LogicEnergyNode(LogicEnergyNode.sameOrNeither);
-		EnergyNode matchDamageType = new GameStateEnergyOutputNode(Color.GOLDENROD, IconManager.getDamageTypeIcon(), new GameStateGetter() {
-			@Override
-			public Energy getValue() {
-				return null;
-			}
-		});
-		EnergyNode matchDamageStrength = new GameStateEnergyOutputNode(Color.FIREBRICK, IconManager.getDamageStrengthIcon(), new GameStateGetter() {
-			@Override
-			public Energy getValue() {
-				return null;
-			}
-		});
+		EnergyNode matchDamageType = new GameStateEnergyInputNode(Color.GOLDENROD, IconManager.getDamageTypeIcon(), new MatchDamageTypeSetter(player));
+		EnergyNode matchDamageStrength = new GameStateEnergyInputNode(Color.FIREBRICK, IconManager.getDamageStrengthIcon(), new MatchDamageStrengthSetter(player));
 		diagram.addNode(subnode31);
 		diagram.addNode(matchDamageType);
 		diagram.addNode(matchDamageStrength);
@@ -273,12 +270,7 @@ public class MainGameScreen implements Screen {
 		diagram.setLocation(matchDamageType, 0.75f, 5f / 6);
 		diagram.setLocation(subnode31, 0.75f, 3f / 6);
 		diagram.setLocation(matchDamageStrength, 0.75f, 1f / 6);
-		EnergyNode matchHeatLevel = new GameStateEnergyOutputNode(Color.RED, IconManager.getHeatIcon(), new GameStateGetter() {
-			@Override
-			public Energy getValue() {
-				return null;
-			}
-		});
+		EnergyNode matchHeatLevel = new GameStateEnergyInputNode(Color.RED, IconManager.getHeatIcon(), new MatchHeatSetter(player));
 		diagram.addNode(matchHeatLevel);
 		diagram.addWire(subnode31, matchHeatLevel);
 		diagram.setLocation(matchHeatLevel, 1f, 1f / 2);
