@@ -65,8 +65,10 @@ public class SchematicPopup implements Component {
 		for (EnergyNode node : baseDiagram.getNodes()) {
 			temp3.set(baseDiagram.getLocation(node));
 			scaleToBounds(temp3);
-			if (node.getSprite() != null)
+			if (node.getSprite() != null) {
+				uiBatch.setColor(node.getColor());
 				uiBatch.draw(node.getSprite(), temp3.x - nodeScale, temp3.y - nodeScale, nodeScale * 2, nodeScale * 2);
+			}
 		}
 		uiBatch.end();
 	}

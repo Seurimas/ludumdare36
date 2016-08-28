@@ -33,6 +33,9 @@ public class IconManager {
 	public static TextureRegion getOffIcon() {
 		return offIcon;
 	}
+	public static TextureRegion getLogicIcon() {
+		return logicIcon;
+	}
 	private static TextureRegion heatIcon;
 	private static TextureRegion attackIcon;
 	private static TextureRegion chargeIcon;
@@ -40,6 +43,7 @@ public class IconManager {
 	private static TextureRegion damageTypeIcon;
 	private static TextureRegion damageStrengthIcon;
 	private static TextureRegion offIcon;
+	private static TextureRegion logicIcon;
 	public static void setTexture(Texture texture) {
 		mainTexture = texture;
 		shieldIcon = new TextureRegion(texture, 32, 64, 8, 8);
@@ -50,6 +54,7 @@ public class IconManager {
 		damageTypeIcon = new TextureRegion(texture, 40, 72, 8, 8);
 		damageStrengthIcon = new TextureRegion(texture, 40, 80, 8, 8);
 		offIcon = new TextureRegion(texture, 40, 88, 8, 8);
+		logicIcon = new TextureRegion(texture, 32, 96, 16, 16);
 	}
 	
 }

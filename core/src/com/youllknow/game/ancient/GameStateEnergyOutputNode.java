@@ -1,5 +1,6 @@
 package com.youllknow.game.ancient;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.youllknow.game.wiring.Schematic.Wire;
 import com.youllknow.game.wiring.nodes.RegisteredEnergyNode;
@@ -8,9 +9,11 @@ public class GameStateEnergyOutputNode extends RegisteredEnergyNode {
 	public static interface GameStateGetter {
 		public Energy getValue();
 	}
+	private final Color color;
 	private final TextureRegion sprite;
 	private final GameStateGetter gameState;
-	public GameStateEnergyOutputNode(TextureRegion sprite, GameStateGetter gameState) {
+	public GameStateEnergyOutputNode(Color color, TextureRegion sprite, GameStateGetter gameState) {
+		this.color = color;
 		this.sprite = sprite;
 		this.gameState = gameState;
 	}
@@ -31,6 +34,10 @@ public class GameStateEnergyOutputNode extends RegisteredEnergyNode {
 	@Override
 	public Energy getOutput(Energy input1, Energy input2) {
 		return null;
+	}
+	@Override
+	public Color getColor() {
+		return color;
 	}
 
 }

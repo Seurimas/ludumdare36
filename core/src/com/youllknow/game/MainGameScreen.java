@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -141,7 +142,11 @@ public class MainGameScreen implements Screen {
 		SchematicPopup popup = new SchematicPopup(diagram, new SchematicInputBehavior() {
 			@Override
 			public void click(Schematic schematic, EnergyNode node, boolean left, boolean right) {
-				System.out.println(node.getId());
+				if (left) {
+					if (node instanceof LogicEnergyNode) {
+						((LogicEnergyNode)node).toggleLogic();
+					}
+				}
 			}
 		}, area);
 		popupEnt.add(popup);
@@ -156,9 +161,9 @@ public class MainGameScreen implements Screen {
 	}
 	private Schematic createWeaponSchematic(Entity player) {
 		Schematic diagram = new Schematic();
-		EnergyNode heatLevel = new GameStateEnergyOutputNode(IconManager.getHeatIcon(), new HeatGetter(player));
-		EnergyNode weaponSettings = new GameStateEnergyOutputNode(IconManager.getAttackIcon(), new WeaponSettingsGetter(player));
-		EnergyNode weaponCharge = new GameStateEnergyOutputNode(IconManager.getChargeIcon(), new WeaponChargeGetter(player));
+		EnergyNode heatLevel = new GameStateEnergyOutputNode(Color.RED, IconManager.getHeatIcon(), new HeatGetter(player));
+		EnergyNode weaponSettings = new GameStateEnergyOutputNode(Color.YELLOW, IconManager.getAttackIcon(), new WeaponSettingsGetter(player));
+		EnergyNode weaponCharge = new GameStateEnergyOutputNode(Color.GOLD, IconManager.getChargeIcon(), new WeaponChargeGetter(player));
 		diagram.addNode(heatLevel);
 		diagram.addNode(weaponSettings);
 		diagram.addNode(weaponCharge);
@@ -176,8 +181,8 @@ public class MainGameScreen implements Screen {
 		diagram.setLocation(subnode11, 0.25f, 3 / 4f);
 		diagram.setLocation(subnode12, 0.25f, 1 / 4f);
 		EnergyNode subnode21 = new LogicEnergyNode(LogicEnergyNode.sameOrNeither);
-		EnergyNode shutOff = new GameStateEnergyInputNode(IconManager.getOffIcon(), new PlayerWeaponSetter(WeaponStat.SHUT_OFF, player));
-		EnergyNode healthLevel = new GameStateEnergyOutputNode(IconManager.getHealthIcon(), new HealthGetter(player));
+		EnergyNode shutOff = new GameStateEnergyInputNode(Color.CYAN, IconManager.getOffIcon(), new PlayerWeaponSetter(WeaponStat.SHUT_OFF, player));
+		EnergyNode healthLevel = new GameStateEnergyOutputNode(Color.GREEN, IconManager.getHealthIcon(), new HealthGetter(player));
 		diagram.addNode(subnode21);
 		diagram.addNode(shutOff);
 		diagram.addNode(healthLevel);
@@ -188,7 +193,7 @@ public class MainGameScreen implements Screen {
 		diagram.setLocation(shutOff, 0.4375f, 0 / 2f);
 		diagram.setLocation(healthLevel, 0.5625f, 0 / 2f);
 		EnergyNode subnode31 = new LogicEnergyNode(LogicEnergyNode.sameOrNeither);
-		EnergyNode fireOrCharge = new GameStateEnergyInputNode(IconManager.getChargeIcon(), new PlayerWeaponSetter(WeaponStat.FIRE_CHARGE, player));
+		EnergyNode fireOrCharge = new GameStateEnergyInputNode(Color.GOLD, IconManager.getChargeIcon(), new PlayerWeaponSetter(WeaponStat.FIRE_CHARGE, player));
 		diagram.addNode(subnode31);
 		diagram.addNode(fireOrCharge);
 		diagram.addWire(subnode21, subnode31);
@@ -196,7 +201,7 @@ public class MainGameScreen implements Screen {
 		diagram.addWire(subnode21, fireOrCharge);
 		diagram.setLocation(subnode31, 0.75f, 1 / 4f);
 		diagram.setLocation(fireOrCharge, 0.75f, 3 / 4f);
-		EnergyNode drainShields = new GameStateEnergyInputNode(IconManager.getShieldIcon(), new PlayerWeaponSetter(WeaponStat.DRAIN_SHIELD, player));
+		EnergyNode drainShields = new GameStateEnergyInputNode(Color.BLUE, IconManager.getShieldIcon(), new PlayerWeaponSetter(WeaponStat.DRAIN_SHIELD, player));
 		diagram.addNode(drainShields);
 		diagram.addWire(subnode31, drainShields);
 		diagram.setLocation(drainShields, 1, 1 / 2f);
@@ -204,10 +209,10 @@ public class MainGameScreen implements Screen {
 	}
 	private Schematic createShieldSchematic(final Entity player) {
 		Schematic diagram = new Schematic();
-		EnergyNode dmgStrength = new GameStateEnergyOutputNode(IconManager.getDamageStrengthIcon(), new DamageStrengthGetter(player));
-		EnergyNode dmgType = new GameStateEnergyOutputNode(IconManager.getDamageTypeIcon(), new DamageTypeGetter(player));
-		EnergyNode heatLevel = new GameStateEnergyOutputNode(IconManager.getHeatIcon(), new HeatGetter(player));
-		EnergyNode healthLevel = new GameStateEnergyOutputNode(IconManager.getHealthIcon(), new HealthGetter(player));
+		EnergyNode dmgStrength = new GameStateEnergyOutputNode(Color.FIREBRICK, IconManager.getDamageStrengthIcon(), new DamageStrengthGetter(player));
+		EnergyNode dmgType = new GameStateEnergyOutputNode(Color.GOLDENROD, IconManager.getDamageTypeIcon(), new DamageTypeGetter(player));
+		EnergyNode heatLevel = new GameStateEnergyOutputNode(Color.RED, IconManager.getHeatIcon(), new HeatGetter(player));
+		EnergyNode healthLevel = new GameStateEnergyOutputNode(Color.GREEN, IconManager.getHealthIcon(), new HealthGetter(player));
 		diagram.addNode(dmgStrength);
 		diagram.addNode(dmgType);
 		diagram.addNode(heatLevel);
@@ -242,13 +247,13 @@ public class MainGameScreen implements Screen {
 		diagram.setLocation(subnode21, 0.5f, 4f / 6);
 		diagram.setLocation(subnode22, 0.5f, 2f / 6);
 		EnergyNode subnode31 = new LogicEnergyNode(LogicEnergyNode.sameOrNeither);
-		EnergyNode matchDamageType = new GameStateEnergyOutputNode(IconManager.getDamageTypeIcon(), new GameStateGetter() {
+		EnergyNode matchDamageType = new GameStateEnergyOutputNode(Color.GOLDENROD, IconManager.getDamageTypeIcon(), new GameStateGetter() {
 			@Override
 			public Energy getValue() {
 				return null;
 			}
 		});
-		EnergyNode matchDamageStrength = new GameStateEnergyOutputNode(IconManager.getDamageStrengthIcon(), new GameStateGetter() {
+		EnergyNode matchDamageStrength = new GameStateEnergyOutputNode(Color.FIREBRICK, IconManager.getDamageStrengthIcon(), new GameStateGetter() {
 			@Override
 			public Energy getValue() {
 				return null;
@@ -264,7 +269,7 @@ public class MainGameScreen implements Screen {
 		diagram.setLocation(matchDamageType, 0.75f, 5f / 6);
 		diagram.setLocation(subnode31, 0.75f, 3f / 6);
 		diagram.setLocation(matchDamageStrength, 0.75f, 1f / 6);
-		EnergyNode matchHeatLevel = new GameStateEnergyOutputNode(IconManager.getHeatIcon(), new GameStateGetter() {
+		EnergyNode matchHeatLevel = new GameStateEnergyOutputNode(Color.RED, IconManager.getHeatIcon(), new GameStateGetter() {
 			@Override
 			public Energy getValue() {
 				return null;

@@ -31,6 +31,7 @@ public class Schematic {
 		public Energy getOutput();
 		public Energy getOutput(Energy input1, Energy input2);
 		public void handleInput(Wire wire, Energy input1);
+		public Color getColor();
 	}
 	public static class Wire {
 		public final EnergyNode input, output;
