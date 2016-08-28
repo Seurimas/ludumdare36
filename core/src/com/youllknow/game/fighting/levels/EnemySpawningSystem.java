@@ -17,6 +17,7 @@ public class EnemySpawningSystem extends EntitySystem {
 		float lastSpawn = 0;
 		float spawnInterval = 2;
 		float maxSpawnInterval = 15;
+		int finishedAt = 2000;
 
 		@Override
 		public boolean spawn(Engine engine, Entity player, float currentTime, float x) {
@@ -34,19 +35,21 @@ public class EnemySpawningSystem extends EntitySystem {
 
 		@Override
 		public boolean finished(float x) {
-			return x > 2000;
+			return x > finishedAt;
 		}
 
 		public void levelUp() {
 			maxSpawnInterval -= 3;
 			if (maxSpawnInterval < 4)
 				maxSpawnInterval = 4;
+			finishedAt += 3000;
 		}
 	}
 	private static final class TankLevel implements Level {
 		float lastSpawn = 0;
 		float spawnInterval = 2;
 		float maxSpawnInterval = 12;
+		int finishedAt = 1000;
 
 		@Override
 		public boolean spawn(Engine engine, Entity player, float currentTime, float x) {
@@ -64,13 +67,14 @@ public class EnemySpawningSystem extends EntitySystem {
 
 		@Override
 		public boolean finished(float x) {
-			return x > 1000;
+			return x > finishedAt;
 		}
 
 		public void levelUp() {
 			maxSpawnInterval -= 3;
 			if (maxSpawnInterval < 4)
 				maxSpawnInterval = 4;
+			finishedAt += 3000;
 		}
 	}
 	public static interface Level {

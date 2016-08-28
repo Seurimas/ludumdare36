@@ -17,6 +17,7 @@ public class SiloAiSystem extends ComponentSystem<SiloEnemy> {
 	@Override
 	public void update(Engine engine, Entity entity, SiloEnemy mainComponent, float delta) {
 		mainComponent.update(delta);
+		mainComponent.moveSource(null);
 		Entity player = mainComponent.player;
 		WorldDenizen playerDenizen = player.getComponent(WorldDenizen.class);
 		WorldDenizen siloDenizen = entity.getComponent(WorldDenizen.class);

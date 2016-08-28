@@ -24,7 +24,7 @@ public class TankAiSystem extends ComponentSystem<TankEnemy> {
 		float distanceToPlayer = tankDenizen.getX() - playerDenizen.getX() - playerDenizen.getWidth();
 		if (Math.abs(distanceToPlayer) < MainGameScreen.SCREEN_WIDTH - 300) {
 			if (mainComponent.canFire())
-				mainComponent.fire(engine, entity, playerDenizen.getCenter());
+				mainComponent.fire(engine, entity, playerDenizen.getCenter().add(playerDenizen.getVelocityX() + 25, playerDenizen.getVelocityY()));
 			tankDenizen.applyFriction(1000f * delta);
 		} else if (distanceToPlayer > 0) {
 			tankDenizen.applyImpulse(tankMovementLeft, delta);

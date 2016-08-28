@@ -16,8 +16,8 @@ public class PlayerAdvancementSystem extends ComponentSystem<PlayerComponent> {
 	public void update(Engine engine, Entity entity, PlayerComponent mainComponent, float delta) {
 		WorldDenizen denizen = entity.getComponent(WorldDenizen.class);
 		if (denizen.getX() > mainComponent.screenLeft + 600)
-			delta *= 3f;
-		mainComponent.screenLeft += 25 * delta;
+			delta *= 2f;
+		mainComponent.screenLeft += 50 * delta;
 		boundPlayer(mainComponent, denizen);
 	}
 	private void boundPlayer(PlayerComponent mainComponent, WorldDenizen denizen) {

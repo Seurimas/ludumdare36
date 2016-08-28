@@ -17,9 +17,9 @@ public class HeatGetter extends PlayerStatGetter {
 
 	public static Energy getHeatEnergy(Entity entity) {
 		float heat = entity.getComponent(PlayerComponent.class).getHeatLevel();
-		if (heat < 0.5)
+		if (heat < 0.3f)
 			return Energy.BLUE;
-		else if (heat < 1)
+		else if (heat < 0.7f)
 			return Energy.GREEN;
 		else
 			return Energy.RED;
