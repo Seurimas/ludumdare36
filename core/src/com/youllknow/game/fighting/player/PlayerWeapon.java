@@ -48,14 +48,14 @@ public class PlayerWeapon implements Component {
 		PlayerComponent playerComponent = entity.getComponent(PlayerComponent.class);
 		if (shutOffEnergy.equals(Energy.RED)) {
 			return;
-		} else if (shutOffEnergy.equals(Energy.BLUE)) {
-			playerComponent.heatUp(0.025f);
-		} else if (shutOffEnergy.equals(Energy.GREEN)) {
-			playerComponent.heatUp(0.05f);
 		}
 		float extraStrength = 0;
 		if (drainEnergy.equals(Energy.BLUE)) {
 			extraStrength = playerComponent.drainShield();
+		} else if (drainEnergy.equals(Energy.RED)) {
+			extraStrength = -1f;
+			playerComponent.shieldUp(0.25f);
+			playerComponent.heatUp(0.025f);
 		}
 		if (fireChargeEnergy.equals(Energy.GREEN)) {
 			chargeStrength += 0.25f;
@@ -77,11 +77,17 @@ public class PlayerWeapon implements Component {
 	}
 	private void sprayAt(Engine engine, Entity entity, float worldX, float worldY, float damage,
 			DamageType damageType, int shotCount) {
+		PlayerComponent playerComponent = entity.getComponent(PlayerComponent.class);
 		WorldDenizen denizen = entity.getComponent(WorldDenizen.class);
 		temp.set(denizen.getCenter());
 		temp.scl(-1).add(worldX, worldY);
 		temp.nor().scl(600f);
 		for (int i = 0;i < shotCount;i++) {
+			if (shutOffEnergy.equals(Energy.BLUE)) {
+				playerComponent.heatUp(0.0025f);
+			} else if (shutOffEnergy.equals(Energy.GREEN)) {
+				playerComponent.heatUp(0.005f);
+			}
 			Entity dummy = new Entity();
 			dummy.add(new Projectile(entity, denizen.getCenter(), temp, new SingleShotBehavior(damageType, damage), 
 					new NonOwnerTargetBehavior().getBehavior(entity)));

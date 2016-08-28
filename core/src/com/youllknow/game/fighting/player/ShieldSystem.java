@@ -15,10 +15,11 @@ public class ShieldSystem extends ComponentSystem<PlayerComponent> {
 	@Override
 	public void update(Engine engine, Entity entity, PlayerComponent mainComponent, float delta) {
 		mainComponent.updateShield(delta);
+		mainComponent.drainHeat(delta);
 		if (mainComponent.triggerShield()) {
 			float amount = mainComponent.drainShieldByTrigger();
 			HealthComponent health = entity.getComponent(HealthComponent.class);
-			health.heal(10 * amount);
+			health.heal(30 * amount);
 		}
 	}
 

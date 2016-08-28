@@ -14,27 +14,27 @@ import com.youllknow.game.fighting.player.AttachedWeapon;
 import com.youllknow.game.fighting.projectiles.ProjectileWeapon;
 import com.youllknow.game.fighting.projectiles.behaviors.SingleShotBehavior;
 
-public class TankEnemy implements Component {
+public class HelicopterEnemy implements Component {
 	private static TextureRegion sprite;
 	private static final int WIDTH = 32;
-	private static final float COOLDOWN = 1f;
+	private static final float COOLDOWN = 0.35f;
 	private float sinceLastShot = -1;
 	public final Entity player;
-	public TankEnemy(Entity player) {
+	public HelicopterEnemy(Entity player) {
 		this.player = player;
 	}
 	public static void spawn(Engine engine, Entity player, Vector2 position) {
-		Entity tank = new Entity();
-		tank.add(new WorldDenizen(new Rectangle(position.x - WIDTH / 2, position.y, 32, 32), 50));
-		tank.add(new TankEnemy(player));
-		tank.add(new AttachedWeapon(tank, -10, -3));
-		DamageType damageType = DamageType.EXPLOSIVE;
-		int damageStrength = 6;
-		tank.add(new ProjectileWeapon(tank, new SingleShotBehavior(damageType, damageStrength), new PlayerOnlyTargetBehaviors(),
+		Entity helicopter = new Entity();
+		helicopter.add(new WorldDenizen(new Rectangle(position.x - WIDTH / 2, position.y, 32, 32), 50));
+		helicopter.add(new HelicopterEnemy(player));
+		helicopter.add(new AttachedWeapon(helicopter, -10, -3));
+		DamageType damageType = DamageType.PROJECTILE;
+		int damageStrength = 2;
+		helicopter.add(new ProjectileWeapon(helicopter, new SingleShotBehavior(damageType, damageStrength), new PlayerOnlyTargetBehaviors(),
 				damageType.color, DamageStrength.color(damageStrength)));
-		tank.add(new HealthComponent(10, new ExplosionDeathBehavior()));
-		tank.add(new SimpleSpriteRenderer(sprite));
-		engine.addEntity(tank);
+		helicopter.add(new HealthComponent(10, new ExplosionDeathBehavior()));
+		helicopter.add(new SimpleSpriteRenderer(sprite));
+		engine.addEntity(helicopter);
 	}
 	public void fire(Engine engine, Entity entity, Vector2 center) {
 		sinceLastShot = 0;
@@ -48,6 +48,6 @@ public class TankEnemy implements Component {
 		return sinceLastShot >= COOLDOWN;
 	}
 	public static void setSprite(TextureRegion sprite) {
-		TankEnemy.sprite = sprite;
+		HelicopterEnemy.sprite = sprite;
 	}
 }

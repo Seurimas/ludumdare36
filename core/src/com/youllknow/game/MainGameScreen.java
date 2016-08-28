@@ -23,6 +23,8 @@ import com.youllknow.game.fighting.HealthComponent.DamageType;
 import com.youllknow.game.fighting.WorldDenizen;
 import com.youllknow.game.fighting.enemies.DeathSystem;
 import com.youllknow.game.fighting.enemies.ExplosionDeathBehavior;
+import com.youllknow.game.fighting.enemies.HelicopterAiSystem;
+import com.youllknow.game.fighting.enemies.HelicopterEnemy;
 import com.youllknow.game.fighting.enemies.TankAiSystem;
 import com.youllknow.game.fighting.enemies.TankEnemy;
 import com.youllknow.game.fighting.levels.EnemySpawningSystem;
@@ -89,6 +91,7 @@ public class MainGameScreen implements Screen {
 		ColorCodedProjectileRenderer.setTexture(mainTexture);
 		setupEngine();
 		TankEnemy.setSprite(new TextureRegion(mainTexture, 0, 32, 32, 32));
+		HelicopterEnemy.setSprite(new TextureRegion(mainTexture, 32, 32, 32, 32));
 	}
 	private void setupEngine() {
 		Entity player = createPlayer();
@@ -113,6 +116,7 @@ public class MainGameScreen implements Screen {
 		engine.addSystem(new PlayerAdvancementSystem());
 		engine.addSystem(new ProjectileCollisionSystem());
 		engine.addSystem(new TankAiSystem());
+		engine.addSystem(new HelicopterAiSystem());
 		engine.addSystem(new DeathSystem());
 		engine.addSystem(new ShieldSystem());
 		setupWiring(player);

@@ -15,7 +15,9 @@ public class MatchHeatSetter extends PlayerStatSetter implements GameStateSetter
 	@Override
 	public void handleInput(Wire wire, Energy energy) {
 		if (energy.equals(HeatGetter.getHeatEnergy(player))) {
+			player.getComponent(PlayerComponent.class).heatUp(0.025f);
 			player.getComponent(PlayerComponent.class).shieldUp(0.25f);
+			player.getComponent(PlayerComponent.class).updateShield(0.5f);
 		}
 	}
 

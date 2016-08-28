@@ -12,6 +12,8 @@ import com.youllknow.game.fighting.rendering.DenizenRendererComponent;
 import com.youllknow.game.wiring.Schematic.EnergyNode.Energy;
 
 public class PlayerComponent implements Component, DenizenRendererComponent {
+	private static final float SHIELD_INTERVAL = 0.6f;
+	private static final float HEAT_SINK = 0.01f;
 	private static final float VERTICAL_FRAMES_IN_SHEET = 4f;
 	private static final float HORIZONTAL_FRAMES = 4f;
 	static {
@@ -78,7 +80,7 @@ public class PlayerComponent implements Component, DenizenRendererComponent {
 	}
 	private final float SHIELD_TRIGGER = 0.125f;
 	public boolean triggerShield() {
-		if (shieldProgress > 1) {
+		if (shieldProgress > SHIELD_INTERVAL) {
 			shieldProgress = 0;
 			return true;
 		}
@@ -99,5 +101,10 @@ public class PlayerComponent implements Component, DenizenRendererComponent {
 	}
 	public float getShieldPercent() {
 		return shieldEnergy;
+	}
+	public void drainHeat(float delta) {
+		heatLevel -= delta * HEAT_SINK;
+		if (heatLevel < 0)
+			heatLevel = 0;
 	}
 }
