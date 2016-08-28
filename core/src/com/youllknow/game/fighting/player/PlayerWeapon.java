@@ -43,7 +43,7 @@ public class PlayerWeapon implements Component {
 		rotateTowards(entity, worldX, worldY);
 		PlayerComponent playerComponent = entity.getComponent(PlayerComponent.class);
 		if (shutOffEnergy.equals(Energy.RED)) {
-//			return;
+			return;
 		} else if (shutOffEnergy.equals(Energy.BLUE)) {
 			playerComponent.heatUp(0.05f);
 		} else if (shutOffEnergy.equals(Energy.GREEN)) {
@@ -80,5 +80,8 @@ public class PlayerWeapon implements Component {
 		Vector2 direction = entity.getComponent(WorldDenizen.class).getCenter();
 		direction.scl(-1).add(worldX, worldY);
 		rotate(direction);
+	}
+	public float getCharge() {
+		return chargeStrength;
 	}
 }

@@ -40,5 +40,8 @@ public class HealthComponent implements Component {
 	public float getLastDamage() {
 		return lastDamage;
 	}
+	public float getHealthPercent() {
+		return currentHealth / maxHealth;
+	}
 
 }

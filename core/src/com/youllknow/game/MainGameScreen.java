@@ -81,10 +81,15 @@ public class MainGameScreen implements Screen {
 		TankEnemy.setSprite(new TextureRegion(mainTexture, 0, 32, 32, 32));
 	}
 	private void setupEngine() {
+		Entity player = createPlayer();
+		engine.addEntity(player);
 		Texture mainTexture = game.assets.get(game.MAIN_TEXTURE, Texture.class);
 		engine.addSystem(new PlayerCameraSystem(camera));
 		engine.addSystem(new BackdropRenderer(game.batch, viewport, mainTexture));
 		engine.addSystem(new SchematicRenderer(game.uiShapes, game.uiBatch));
+		engine.addSystem(new HealthHeatRenderer(player, game.uiShapes, game.uiBatch,
+				new Rectangle(0, LOWER_UI_HEIGHT - 25, SCREEN_WIDTH / 2, 25), 
+				new Rectangle(SCREEN_WIDTH / 2, LOWER_UI_HEIGHT - 25, SCREEN_WIDTH / 2, 25)));
 		engine.addSystem(new DebugWorldRenderer(game.batch, game.shapes));
 		engine.addSystem(new DenizenRenderer(game.batch));
 		engine.addSystem(new SchematicInputSystem(game.input));
@@ -98,22 +103,22 @@ public class MainGameScreen implements Screen {
 		engine.addSystem(new ProjectileCollisionSystem());
 		engine.addSystem(new TankAiSystem());
 		engine.addSystem(new DeathSystem());
-		Entity player = createPlayer();
-		engine.addEntity(player);
+		setupWiring(player);
+		engine.addSystem(new EnemySpawningSystem(player));
+	}
+	private void setupWiring(Entity player) {
 		Schematic sheildSchematic = createShieldSchematic(player);
-		Entity popupEnt1 = createSchematicPopup(sheildSchematic, new Rectangle(0, 0, SCREEN_WIDTH / 2, LOWER_UI_HEIGHT));
+		Entity popupEnt1 = createSchematicPopup(sheildSchematic, new Rectangle(0, 0, SCREEN_WIDTH / 2, LOWER_UI_HEIGHT - 25));
 		initializePowerFlow(sheildSchematic, popupEnt1.getComponent(SchematicPopup.class));
 		engine.addEntity(popupEnt1);
 		Schematic weaponSchematic = createWeaponSchematic(player);
-		Entity popupEnt2 = createSchematicPopup(weaponSchematic, new Rectangle(SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, LOWER_UI_HEIGHT / 2));
+		Entity popupEnt2 = createSchematicPopup(weaponSchematic, new Rectangle(SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, LOWER_UI_HEIGHT - 25));
 		PowerFlow weaponPowerFlow = initializePowerFlow(weaponSchematic, popupEnt2.getComponent(SchematicPopup.class));
 		engine.addEntity(popupEnt2);
-		Schematic thirdSchematic = createHeatSinkSchematic(player);
-		Entity popupEnt3 = createSchematicPopup(thirdSchematic, new Rectangle(SCREEN_WIDTH / 2, LOWER_UI_HEIGHT / 2, SCREEN_WIDTH / 2, LOWER_UI_HEIGHT / 2));
-		engine.addEntity(popupEnt3);
+//		Schematic thirdSchematic = createHeatSinkSchematic(player);
+//		Entity popupEnt3 = createSchematicPopup(thirdSchematic, new Rectangle(SCREEN_WIDTH / 2, LOWER_UI_HEIGHT / 2, SCREEN_WIDTH / 2, LOWER_UI_HEIGHT / 2));
+//		engine.addEntity(popupEnt3);
 		player.getComponent(PlayerWeapon.class).setPowerFlow(weaponPowerFlow);
-//		engine.addEntity(createTargetDummy());
-		engine.addSystem(new EnemySpawningSystem(player));
 	}
 	private Entity createPlayer() {
 		Entity entity = new Entity();
@@ -147,21 +152,6 @@ public class MainGameScreen implements Screen {
 		powerFlow.calculate();
 		popup.setPowerFlow(powerFlow);
 		return powerFlow;
-	}
-	private Schematic createDebugSchematic() {
-		Schematic diagram = new Schematic();
-		EnergyNode node1 = new LogicEnergyNode(LogicEnergyNode.sameOrNeither);
-		diagram.addNode(node1);
-		diagram.setLocation(node1, 0, 0.66f);
-		EnergyNode node2 = new LogicEnergyNode(LogicEnergyNode.sameOrNeither);
-		diagram.addNode(node2);
-		diagram.setLocation(node2, 0, 0.33f);
-		EnergyNode node3 = new LogicEnergyNode(LogicEnergyNode.sameOrNeither);
-		diagram.addNode(node3);
-		diagram.setLocation(node3, 0.25f, 0.5f);
-		diagram.addWire(node1, node3);
-		diagram.addWire(node2, node3);
-		return diagram;
 	}
 	private Schematic createWeaponSchematic(Entity player) {
 		Schematic diagram = new Schematic();
@@ -209,11 +199,6 @@ public class MainGameScreen implements Screen {
 		diagram.addNode(drainShields);
 		diagram.addWire(subnode31, drainShields);
 		diagram.setLocation(drainShields, 1, 1 / 2f);
-		return diagram;
-	}
-	private Schematic createHeatSinkSchematic(Entity player) {
-		Schematic diagram = new Schematic();
-		
 		return diagram;
 	}
 	private Schematic createShieldSchematic(final Entity player) {
