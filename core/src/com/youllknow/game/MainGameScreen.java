@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -102,6 +103,8 @@ public class MainGameScreen implements Screen {
 		SiloEnemy.setSprite(new TextureRegion(mainTexture, 0, 96, 32, 32));
 	}
 	private void setupEngine() {
+		Music entryTheme = game.assets.get(LudumDare36Game.ENTRANCE_TUNE, Music.class);
+		Music mainTheme = game.assets.get(LudumDare36Game.MAIN_THEME, Music.class);
 		TooltipManager tooltips = new TooltipManager();
 		Entity player = createPlayer();
 		engine.addEntity(player);
@@ -118,7 +121,7 @@ public class MainGameScreen implements Screen {
 		engine.addSystem(new DenizenRenderer(game.batch));
 		engine.addSystem(new ProjectileRenderer(game.batch));
 		engine.addSystem(new SchematicInputSystem(game.input, tooltips));
-		engine.addSystem(new IntroSystem(player, game.uiShapes, tooltips));
+		engine.addSystem(new IntroSystem(player, entryTheme, mainTheme, game.uiShapes, tooltips));
 		engine.addSystem(new TooltipSystem(game.uiBatch, game.uiShapes, new BitmapFont(), tooltipArea, tooltips));
 		engine.addSystem(new PlayerShootingSystem(game.input));
 		engine.addSystem(new AttachedWeaponSystem());

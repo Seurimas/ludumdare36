@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,8 +19,14 @@ public class LudumDare36Game extends Game {
 	Texture img;
 	public InputMarshal input;
 	public static final String MAIN_TEXTURE = "Main.png";
+	public static final String ENTRANCE_TUNE = "entrance_tune.mp3";
+	public static final String MAIN_THEME = "MainTheme.mp3";
 	private static final String[] textures = {
 			MAIN_TEXTURE,
+	};
+	private static final String[] music = {
+			ENTRANCE_TUNE,
+			MAIN_THEME
 	};
 	@Override
 	public void create () {
@@ -28,9 +35,11 @@ public class LudumDare36Game extends Game {
 		shapes = new ShapeRenderer();
 		uiShapes = new ShapeRenderer();
 		input = new InputMarshal();
-		img = new Texture("badlogic.jpg");
 		for (String texture : textures) {
 			assets.load(texture, Texture.class);
+		}
+		for (String song : music) {
+			assets.load(song, Music.class);
 		}
 	}
 	@Override

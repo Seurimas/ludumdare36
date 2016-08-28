@@ -3,6 +3,7 @@ package com.youllknow.game.ancient;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -14,10 +15,14 @@ import com.youllknow.game.utils.TooltipManager;
 
 public class IntroSystem extends EntitySystem {
 	private final Entity player;
+	private final Music music;
+	private final Music continueMusic;
 	private final TooltipManager title;
 	private final ShapeRenderer uiShapes;
-	public IntroSystem(Entity player, ShapeRenderer uiShapes, TooltipManager tooltip) {
+	public IntroSystem(Entity player, Music music, Music continueMusic, ShapeRenderer uiShapes, TooltipManager tooltip) {
 		this.player = player;
+		this.music = music;
+		this.continueMusic = continueMusic;
 		this.title = tooltip;
 		this.uiShapes = uiShapes;
 	}
@@ -30,6 +35,15 @@ public class IntroSystem extends EntitySystem {
 	private final float FIN = 60f; 
 	@Override
 	public void update(float deltaTime) {
+		if (progress < 30f && !music.isPlaying()) {
+			music.stop();
+			music.play();
+			music.setPosition(0);
+			music.setLooping(false);
+		} else if (!music.isPlaying() && !continueMusic.isPlaying()) {
+			continueMusic.play();
+			continueMusic.setLooping(true);
+		}
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		progress += deltaTime;
