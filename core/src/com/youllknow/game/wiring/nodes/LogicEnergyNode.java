@@ -81,20 +81,27 @@ public class LogicEnergyNode extends RegisteredEnergyNode {
 			return IconManager.getLogicIconInverted();
 		}
 	};
-//	public static final Logic green = new Logic() {
-//		public Energy getOutput(Energy input1, Energy input2) {
-//			return Energy.GREEN;
-//		};
-//		public Color getColor() {
-//			return Color.GREEN;
-//		}
-//	};
+	public static final Logic anyGreen = new Logic() {
+		public Energy getOutput(Energy input1, Energy input2) {
+			if (input1.equals(Energy.GREEN) || input2.equals(Energy.GREEN))
+				return Energy.GREEN;
+			else
+				return Energy.RED;
+		};
+		public Color getColor() {
+			return Color.GREEN;
+		}
+		@Override
+		public TextureRegion getSprite() {
+			return IconManager.getLogicIconInverted();
+		}
+	};
 	public static final Logic anyBlue = new Logic() {
 		public Energy getOutput(Energy input1, Energy input2) {
 			if (input1.equals(Energy.BLUE) || input2.equals(Energy.BLUE))
 				return Energy.BLUE;
 			else
-				return Energy.RED;
+				return Energy.GREEN;
 		};
 		public Color getColor() {
 			return Color.BLUE;
@@ -110,7 +117,7 @@ public class LogicEnergyNode extends RegisteredEnergyNode {
 //			oddGreen,
 			oddRed,
 			anyBlue,
-//			green,
+			anyGreen,
 			anyRed
 	};
 	

@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.youllknow.game.fighting.HealthComponent;
 import com.youllknow.game.fighting.player.PlayerComponent;
+import com.youllknow.game.fighting.player.PlayerWeapon;
 
 public class HealthHeatShieldRenderer extends EntitySystem {
 	private final Entity player;
@@ -28,13 +29,16 @@ public class HealthHeatShieldRenderer extends EntitySystem {
 		float healthPercent = player.getComponent(HealthComponent.class).getHealthPercent();
 		float heatPercent = player.getComponent(PlayerComponent.class).getHeatLevel();
 		float shieldPercent = player.getComponent(PlayerComponent.class).getShieldPercent();
+		float chargePercent = player.getComponent(PlayerWeapon.class).getCharge();
 		uiShapes.begin(ShapeType.Filled);
 		uiShapes.setColor(Color.GREEN);
 		uiShapes.rect(healthArea.x, healthArea.y, healthArea.width * healthPercent, healthArea.height - 5);
 		uiShapes.setColor(Color.BLUE);
 		uiShapes.rect(healthArea.x, healthArea.y + healthArea.height - 5, healthArea.width * shieldPercent, 5);
 		uiShapes.setColor(Color.RED);
-		uiShapes.rect(heatArea.x, heatArea.y, heatArea.width * heatPercent, heatArea.height);
+		uiShapes.rect(heatArea.x, heatArea.y, heatArea.width * heatPercent, heatArea.height - 5);
+		uiShapes.setColor(Color.YELLOW);
+		uiShapes.rect(heatArea.x, heatArea.y + heatArea.height - 5, heatArea.width * chargePercent, 5);
 		uiShapes.end();
 		uiShapes.begin(ShapeType.Line);
 		uiShapes.setColor(Color.GREEN);
@@ -43,6 +47,8 @@ public class HealthHeatShieldRenderer extends EntitySystem {
 		uiShapes.rect(healthArea.x, healthArea.y + healthArea.height - 5, healthArea.width, 5);
 		uiShapes.setColor(Color.RED);
 		uiShapes.rect(heatArea.x, heatArea.y, heatArea.width, heatArea.height);
+		uiShapes.setColor(Color.YELLOW);
+		uiShapes.rect(heatArea.x, heatArea.y + heatArea.height - 5, heatArea.width, 5);
 		uiShapes.end();
 	}
 }
