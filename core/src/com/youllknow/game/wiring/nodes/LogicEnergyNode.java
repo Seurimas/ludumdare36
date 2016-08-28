@@ -12,6 +12,7 @@ public class LogicEnergyNode extends RegisteredEnergyNode {
 	public static interface Logic {
 		public Energy getOutput(Energy input1, Energy input2);
 		public Color getColor();
+		public TextureRegion getSprite();
 	}
 	public static final Logic sameOrNeither = new Logic() {
 		public Energy getOutput(Energy input1, Energy input2) {
@@ -30,16 +31,24 @@ public class LogicEnergyNode extends RegisteredEnergyNode {
 		public Color getColor() {
 			return Color.WHITE;
 		}
+		@Override
+		public TextureRegion getSprite() {
+			return IconManager.getLogicIcon();
+		}
 	};
 	public static final Logic oddBlue = new Logic() {
 		public Energy getOutput(Energy input1, Energy input2) {
 			if (input1 == input2)
-				return Energy.RED;
+				return Energy.GREEN;
 			else
 				return Energy.BLUE;
 		};
 		public Color getColor() {
-			return Color.PURPLE;
+			return Color.BLUE;
+		}
+		@Override
+		public TextureRegion getSprite() {
+			return IconManager.getLogicIcon();
 		}
 	};
 	public static final Logic oddRed = new Logic() {
@@ -50,52 +59,59 @@ public class LogicEnergyNode extends RegisteredEnergyNode {
 				return Energy.RED;
 		};
 		public Color getColor() {
-			return Color.YELLOW;
+			return Color.RED;
+		}
+		@Override
+		public TextureRegion getSprite() {
+			return IconManager.getLogicIcon();
 		}
 	};
-	public static final Logic oddGreen = new Logic() {
+	public static final Logic anyRed = new Logic() {
 		public Energy getOutput(Energy input1, Energy input2) {
-			if (input1 == input2)
-				return Energy.BLUE;
+			if (input1.equals(Energy.RED) || input2.equals(Energy.RED))
+				return Energy.RED;
 			else
-				return Energy.GREEN;
-		};
-		public Color getColor() {
-			return Color.CYAN;
-		}
-	};
-	public static final Logic red = new Logic() {
-		public Energy getOutput(Energy input1, Energy input2) {
-			return Energy.RED;
+				return Energy.BLUE;
 		};
 		public Color getColor() {
 			return Color.RED;
 		}
-	};
-	public static final Logic green = new Logic() {
-		public Energy getOutput(Energy input1, Energy input2) {
-			return Energy.GREEN;
-		};
-		public Color getColor() {
-			return Color.GREEN;
+		@Override
+		public TextureRegion getSprite() {
+			return IconManager.getLogicIconInverted();
 		}
 	};
-	public static final Logic blue = new Logic() {
+//	public static final Logic green = new Logic() {
+//		public Energy getOutput(Energy input1, Energy input2) {
+//			return Energy.GREEN;
+//		};
+//		public Color getColor() {
+//			return Color.GREEN;
+//		}
+//	};
+	public static final Logic anyBlue = new Logic() {
 		public Energy getOutput(Energy input1, Energy input2) {
-			return Energy.BLUE;
+			if (input1.equals(Energy.BLUE) || input2.equals(Energy.BLUE))
+				return Energy.BLUE;
+			else
+				return Energy.RED;
 		};
 		public Color getColor() {
 			return Color.BLUE;
+		}
+		@Override
+		public TextureRegion getSprite() {
+			return IconManager.getLogicIconInverted();
 		}
 	};
 	private static final Logic[] logics = new Logic[] {
 			sameOrNeither,
 			oddBlue,
-			oddGreen,
+//			oddGreen,
 			oddRed,
-			blue,
-			green,
-			red
+			anyBlue,
+//			green,
+			anyRed
 	};
 	
 	private Logic logic;
@@ -109,7 +125,7 @@ public class LogicEnergyNode extends RegisteredEnergyNode {
 
 	@Override
 	public TextureRegion getSprite() {
-		return IconManager.getLogicIcon();
+		return logic.getSprite();
 	}
 
 	@Override
