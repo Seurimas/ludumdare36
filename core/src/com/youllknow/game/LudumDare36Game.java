@@ -20,8 +20,8 @@ public class LudumDare36Game extends Game {
 	Texture img;
 	public InputMarshal input;
 	public static final String MAIN_TEXTURE = "Main.png";
-	public static final String ENTRANCE_TUNE = "entrance_tune.wav";
-	public static final String MAIN_THEME = "main_theme.wav";
+	public static final String ENTRANCE_TUNE = "entrance_tune.mp3";
+	public static final String MAIN_THEME = "main_theme.mp3";
 	public static final String MY_GUN = "myFire.wav";
 	public static final String THEIR_GUN = "theirFire.wav";
 	public static final String SILO_GUN = "siloFire.wav";
