@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
+import com.youllknow.game.IconManager;
 import com.youllknow.game.fighting.HealthComponent;
 
 public class HealthHeatShieldRenderer extends EntitySystem {
@@ -19,8 +20,8 @@ public class HealthHeatShieldRenderer extends EntitySystem {
 		this.player = player;
 		this.uiBatch = uiBatch;
 		this.uiShapes = uiShapes;
-		this.healthArea = healthArea;
-		this.heatArea = heatArea;
+		this.healthArea = new Rectangle(healthArea.x + 8, healthArea.y, healthArea.width - 8, healthArea.height);
+		this.heatArea = new Rectangle(heatArea.x + 8, heatArea.y, heatArea.width - 8, heatArea.height);
 	}
 	@Override
 	public void update(float deltaTime) {
@@ -31,7 +32,10 @@ public class HealthHeatShieldRenderer extends EntitySystem {
 		uiShapes.begin(ShapeType.Filled);
 		uiShapes.setColor(Color.GREEN);
 		uiShapes.rect(healthArea.x, healthArea.y, healthArea.width * healthPercent, healthArea.height - 5);
-		uiShapes.setColor(Color.BLUE);
+		if (heatPercent >= 0.95f)
+			uiShapes.setColor(Color.RED);
+		else
+			uiShapes.setColor(Color.BLUE);
 		uiShapes.rect(healthArea.x, healthArea.y + healthArea.height - 5, healthArea.width * shieldPercent, 5);
 		uiShapes.setColor(Color.RED);
 		uiShapes.rect(heatArea.x, heatArea.y, heatArea.width * heatPercent, heatArea.height - 5);
@@ -41,12 +45,25 @@ public class HealthHeatShieldRenderer extends EntitySystem {
 		uiShapes.begin(ShapeType.Line);
 		uiShapes.setColor(Color.GREEN);
 		uiShapes.rect(healthArea.x, healthArea.y, healthArea.width, healthArea.height);
-		uiShapes.setColor(Color.BLUE);
+		if (heatPercent >= 0.95f)
+			uiShapes.setColor(Color.RED);
+		else
+			uiShapes.setColor(Color.BLUE);
 		uiShapes.rect(healthArea.x, healthArea.y + healthArea.height - 5, healthArea.width, 5);
 		uiShapes.setColor(Color.RED);
 		uiShapes.rect(heatArea.x, heatArea.y, heatArea.width, heatArea.height);
 		uiShapes.setColor(Color.YELLOW);
 		uiShapes.rect(heatArea.x, heatArea.y + heatArea.height - 5, heatArea.width, 5);
 		uiShapes.end();
+		uiBatch.begin();
+		uiBatch.setColor(Color.WHITE);
+		uiBatch.draw(IconManager.getHealthIcon(), healthArea.x - 8, healthArea.y, 8, 8);
+		uiBatch.setColor(Color.WHITE);
+		uiBatch.draw(IconManager.getShieldIcon(), healthArea.x - 8, healthArea.y + 16, 8, 8);
+		uiBatch.setColor(Color.WHITE);
+		uiBatch.draw(IconManager.getHeatIcon(), heatArea.x - 8, heatArea.y, 8, 8);
+		uiBatch.setColor(Color.WHITE);
+		uiBatch.draw(IconManager.getChargeIcon(), heatArea.x - 8, heatArea.y + 16, 8, 8);
+		uiBatch.end();
 	}
 }

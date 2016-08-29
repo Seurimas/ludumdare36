@@ -38,7 +38,7 @@ public class PlayerFlyingSystem extends EntitySystem {
 				playerComponent.walking = false;
 			} else {
 				playerComponent.walking = true;
-				playerComponent.heatUp(0.01f * deltaTime);
+//				playerComponent.heatUp(0.001f * deltaTime);
 			}
 			walker.setVelocity(targetMovement);
 		}

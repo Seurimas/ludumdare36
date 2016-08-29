@@ -48,7 +48,9 @@ public class Schematic {
 	private HashMap<EnergyNode, List<Wire>> dependencies = new HashMap<EnergyNode, List<Wire>>();
 	private HashSet<Wire> wires = new HashSet<Wire>();
 	private final HashMap<EnergyNode, Vector2> diagram = new HashMap<EnergyNode, Vector2>();
-	public Schematic() {
+	public final String name;
+	public Schematic(String name) {
+		this.name = name;
 	}
 	public void addNode(EnergyNode node) {
 		nodes.add(node);

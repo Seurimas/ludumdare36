@@ -95,9 +95,9 @@ public class EnemySpawningSystem extends EntitySystem {
 		public boolean spawn(Engine engine, Entity player, float currentTime, float x);
 		public boolean finished(float x);
 	}
-	public static final IntroLevel introLevel = new IntroLevel();
-	public static final TankLevel tankLevel = new TankLevel();
-	public static final HelicopterLevel helicopterLevel = new HelicopterLevel();
+	public final IntroLevel introLevel = new IntroLevel();
+	public final TankLevel tankLevel = new TankLevel();
+	public final HelicopterLevel helicopterLevel = new HelicopterLevel();
 	private final Entity player;
 	private Level level = introLevel;
 	private float timeElapsed = 0;

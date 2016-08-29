@@ -3,6 +3,7 @@ package com.youllknow.game.fighting.player;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -20,13 +21,19 @@ import com.youllknow.game.wiring.Schematic.EnergyNode.Energy;
 
 public class PlayerWeapon implements Component {
 	private final TextureRegion sprite;
+	private final Sound fireSound;
+	private final Sound shutOffSound;
+	private final Sound shieldUpSound;
 	private float rotation = 0;
 	private float chargeStrength = 0;
 	private final float MAX_CHARGE_STRENGTH = 10;
 	private PowerFlow powerFlow;
 	public Energy drainEnergy, fireChargeEnergy, shutOffEnergy;
-	public PlayerWeapon(TextureRegion sprite) {
+	public PlayerWeapon(TextureRegion sprite, Sound fireSound, Sound shutOffSound, Sound shieldUpSound) {
 		this.sprite = sprite;
+		this.fireSound = fireSound;
+		this.shutOffSound = shutOffSound;
+		this.shieldUpSound = shieldUpSound;
 	}
 	public void setPowerFlow(PowerFlow powerFlow) {
 		this.powerFlow = powerFlow;
@@ -47,6 +54,7 @@ public class PlayerWeapon implements Component {
 		rotateTowards(entity, worldX, worldY);
 		PlayerComponent playerComponent = entity.getComponent(PlayerComponent.class);
 		if (shutOffEnergy.equals(Energy.RED)) {
+			shutOffSound.play();
 			return;
 		} else if (shutOffEnergy.equals(Energy.BLUE)) {
 			playerComponent.heatUp(0.0025f);
@@ -58,11 +66,13 @@ public class PlayerWeapon implements Component {
 			extraStrength = playerComponent.drainShield();
 		} else if (drainEnergy.equals(Energy.RED)) {
 			extraStrength = -1f;
+			if (playerComponent.getShieldPercent() != 1)
+				shieldUpSound.play();
 			playerComponent.shieldUp(0.25f);
 			playerComponent.heatUp(0.025f);
 		}
 		if (fireChargeEnergy.equals(Energy.GREEN)) {
-			chargeStrength += 0.25f;
+			chargeStrength += 0.25f + extraStrength / 5;
 			if (chargeStrength > MAX_CHARGE_STRENGTH)
 				chargeStrength = MAX_CHARGE_STRENGTH;
 			return;
@@ -95,6 +105,7 @@ public class PlayerWeapon implements Component {
 			engine.addEntity(dummy);
 			temp.rotate(30);
 		}
+		fireSound.play();
 	}
 	private void rotateTowards(Entity entity, float worldX, float worldY) {
 		Vector2 direction = entity.getComponent(WorldDenizen.class).getCenter();

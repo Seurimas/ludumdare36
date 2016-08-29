@@ -3,6 +3,7 @@ package com.youllknow.game.fighting.enemies;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -17,6 +18,7 @@ import com.youllknow.game.fighting.projectiles.behaviors.SingleShotBehavior;
 
 public class SiloEnemy extends AttachedWeapon {
 	private static TextureRegion sprite;
+	private static Sound fire;
 	private static final int WIDTH = 32;
 	private static final float COOLDOWN = 1f;
 	private float sinceLastShot = -1;
@@ -27,10 +29,10 @@ public class SiloEnemy extends AttachedWeapon {
 		this.player = player;
 		this.energyWeapon = new ProjectileWeapon(me, 1000,
 				new SingleShotBehavior(DamageType.ENERGY, 9), new PlayerOnlyTargetBehaviors(),
-				DamageType.ENERGY.color, DamageStrength.color(9));
+				fire, DamageType.ENERGY.color, DamageStrength.color(9));
 		this.missileWeapon = new ProjectileWeapon(me, 1000, 
 				new SingleShotBehavior(DamageType.EXPLOSIVE, 15), new PlayerOnlyTargetBehaviors(),
-				DamageType.EXPLOSIVE.color, DamageStrength.color(15));
+				fire, DamageType.EXPLOSIVE.color, DamageStrength.color(15));
 	}
 	public static void spawn(Engine engine, Entity player, Vector2 position) {
 		Entity tank = new Entity();
@@ -55,6 +57,9 @@ public class SiloEnemy extends AttachedWeapon {
 	}
 	public static void setSprite(TextureRegion sprite) {
 		SiloEnemy.sprite = sprite;
+	}
+	public static void setFireSound(Sound sound) {
+		SiloEnemy.fire = sound;
 	}
 	@Override
 	public void moveSource(ProjectileWeapon weapon) {

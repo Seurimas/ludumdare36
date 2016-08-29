@@ -7,7 +7,7 @@ import com.youllknow.game.wiring.Schematic.EnergyNode.Energy;
 import com.youllknow.game.wiring.Schematic.Wire;
 
 public class MatchDamageTypeSetter extends PlayerStatSetter implements GameStateSetter {
-
+	private boolean triggered;
 	public MatchDamageTypeSetter(Entity player) {
 		super(player);
 	}
@@ -16,12 +16,19 @@ public class MatchDamageTypeSetter extends PlayerStatSetter implements GameState
 	public void handleInput(Wire wire, Energy energy) {
 		if (energy.equals(DamageTypeGetter.getDamageTypeEnergy(player))) {
 			player.getComponent(PlayerComponent.class).shieldUp(0.125f);
-		}
+			triggered = true;
+		} else
+			triggered = false;
 	}
 
 	@Override
 	public String getDescription() {
 		return "If the color matches the output of the Damage Type node, gain 1/8 shield power.";
+	}
+
+	@Override
+	public boolean needsAttention() {
+		return triggered;
 	}
 
 }

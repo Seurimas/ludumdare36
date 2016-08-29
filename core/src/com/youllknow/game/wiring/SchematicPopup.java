@@ -3,6 +3,7 @@ package com.youllknow.game.wiring;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Interpolation;
@@ -18,6 +19,7 @@ public class SchematicPopup implements Component {
 	}
 	private float lifetime = 0;
 	private Schematic baseDiagram;
+	private final BitmapFont font;
 	private Rectangle bounds;
 	private SchematicInputBehavior inputBehavior;
 	private final float nodeScale = 6f;
@@ -26,11 +28,13 @@ public class SchematicPopup implements Component {
 	private static final Color c2 = Color.GREEN;
 	private static final Color c3 = Color.BLUE;
 	private static final float BORDER = 10;
-	public SchematicPopup(Schematic diagram, SchematicInputBehavior inputBehavior, Rectangle bounds) {
+	public SchematicPopup(Schematic diagram, SchematicInputBehavior inputBehavior, 
+			BitmapFont font, Rectangle bounds) {
 		baseDiagram = diagram;
+		this.font = font;
 		this.inputBehavior = inputBehavior;
 		this.bounds = new Rectangle(bounds.x + BORDER, bounds.y + BORDER, 
-				bounds.width - BORDER * 2, bounds.height - BORDER * 2);
+				bounds.width - BORDER * 2, bounds.height - BORDER * 2 - 15);
 	}
 	private PowerFlow powerFlow;
 	public void setPowerFlow(PowerFlow powerFlow) {
@@ -70,6 +74,8 @@ public class SchematicPopup implements Component {
 				uiBatch.draw(node.getSprite(), temp3.x - nodeScale, temp3.y - nodeScale, nodeScale * 2, nodeScale * 2);
 			}
 		}
+		font.setColor(Color.GOLD);
+		font.draw(uiBatch, baseDiagram.name, bounds.x, bounds.y + bounds.height);
 		uiBatch.end();
 	}
 	private void renderEnergyWire(ShapeRenderer uiShapes, float flowPlace, Wire wire, Energy energy) {

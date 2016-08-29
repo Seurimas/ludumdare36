@@ -4,6 +4,10 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+import com.youllknow.game.fighting.HealthComponent;
+import com.youllknow.game.fighting.HealthComponent.DamageType;
 import com.youllknow.game.fighting.projectiles.ProjectileWeapon;
 import com.youllknow.game.input.InputMarshal;
 import com.youllknow.game.utils.AshleyUtils;
@@ -22,6 +26,11 @@ public class PlayerShootingSystem extends EntitySystem implements ComponentHandl
 		if (input.isLeftJustClicked(false)) {
 			mainComponent.fire(engine, entity, input.worldX, input.worldY);
 		}
+		if (Gdx.input.isKeyJustPressed(Keys.Q)) {
+			entity.getComponent(PlayerComponent.class).toggleWeaponSettings();
+		}
+		if (Gdx.input.isKeyJustPressed(Keys.Y))
+			entity.getComponent(HealthComponent.class).damage(DamageType.ENERGY, 1000);
 	}
 	@Override
 	public void update(float deltaTime) {

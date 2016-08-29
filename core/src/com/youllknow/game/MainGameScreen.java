@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -90,21 +91,26 @@ public class MainGameScreen implements Screen {
 	private OrthographicCamera camera = new OrthographicCamera(800, SCREEN_HEIGHT);
 	private Viewport viewport = new StretchViewport(800, SCREEN_HEIGHT, camera);
 	private final Engine engine;
+	Music entryTheme;
+	Music mainTheme;
 	public MainGameScreen(LudumDare36Game game) {
 		this.game = game;
 		viewport.apply(true);
 		this.engine = new Engine();
 		Texture mainTexture = game.assets.get(game.MAIN_TEXTURE, Texture.class);
+		entryTheme = game.assets.get(LudumDare36Game.ENTRANCE_TUNE, Music.class);
+		mainTheme = game.assets.get(LudumDare36Game.MAIN_THEME, Music.class);
 		IconManager.setTexture(mainTexture);
 		ColorCodedProjectileRenderer.setTexture(mainTexture);
 		setupEngine();
 		TankEnemy.setSprite(new TextureRegion(mainTexture, 0, 32, 32, 32));
 		HelicopterEnemy.setSprite(new TextureRegion(mainTexture, 32, 32, 32, 32));
 		SiloEnemy.setSprite(new TextureRegion(mainTexture, 0, 96, 32, 32));
+		TankEnemy.setFireSound(game.assets.get(game.THEIR_GUN, Sound.class));
+		HelicopterEnemy.setFireSound(game.assets.get(game.THEIR_GUN, Sound.class));
+		SiloEnemy.setFireSound(game.assets.get(game.SILO_GUN, Sound.class));
 	}
 	private void setupEngine() {
-		Music entryTheme = game.assets.get(LudumDare36Game.ENTRANCE_TUNE, Music.class);
-		Music mainTheme = game.assets.get(LudumDare36Game.MAIN_THEME, Music.class);
 		TooltipManager tooltips = new TooltipManager();
 		Entity player = createPlayer();
 		engine.addEntity(player);
@@ -157,6 +163,9 @@ public class MainGameScreen implements Screen {
 	private Entity createPlayer() {
 		Entity entity = new Entity();
 		Texture mainTexture = game.assets.get(game.MAIN_TEXTURE, Texture.class);
+		Sound playerFireSound = game.assets.get(game.MY_GUN, Sound.class);
+		Sound shutOffSound = game.assets.get(game.SHUT_OFF, Sound.class);
+		Sound shieldUpSound = game.assets.get(game.SHIELD_UP, Sound.class);
 		PlayerComponent player = new PlayerComponent(mainTexture);
 		WorldDenizen denizen = new WorldDenizen(new Rectangle(0, 0, 50, 50), 10);
 //		AttachedWeapon weapon = new AttachedWeapon(entity, 25, 25);
@@ -165,8 +174,8 @@ public class MainGameScreen implements Screen {
 		entity.add(denizen);
 //		entity.add(weapon);
 //		entity.add(projectileWeapon);
-		entity.add(new HealthComponent(100, new PlayerDeathBehavior()));
-		entity.add(new PlayerWeapon(new TextureRegion(mainTexture, 0, 64, 9, 9)));
+		entity.add(new HealthComponent(100, new PlayerDeathBehavior(game)));
+		entity.add(new PlayerWeapon(new TextureRegion(mainTexture, 0, 64, 9, 9), playerFireSound, shutOffSound, shieldUpSound));
 		return entity;
 	}
 	private Entity createSchematicPopup(Schematic diagram, Rectangle area) {
@@ -180,7 +189,7 @@ public class MainGameScreen implements Screen {
 					}
 				}
 			}
-		}, area);
+		}, new BitmapFont(), area);
 		popupEnt.add(popup);
 		
 		return popupEnt;
@@ -192,7 +201,7 @@ public class MainGameScreen implements Screen {
 		return powerFlow;
 	}
 	private Schematic createWeaponSchematic(Entity player) {
-		Schematic diagram = new Schematic();
+		Schematic diagram = new Schematic("Phasers");
 		EnergyNode heatLevel = new GameStateEnergyOutputNode(Color.RED, IconManager.getHeatIcon(), new HeatGetter(player));
 		EnergyNode weaponSettings = new GameStateEnergyOutputNode(Color.YELLOW, IconManager.getAttackIcon(), new WeaponSettingsGetter(player));
 		EnergyNode weaponCharge = new GameStateEnergyOutputNode(Color.GOLD, IconManager.getChargeIcon(), new WeaponChargeGetter(player));
@@ -240,7 +249,7 @@ public class MainGameScreen implements Screen {
 		return diagram;
 	}
 	private Schematic createShieldSchematic(final Entity player) {
-		Schematic diagram = new Schematic();
+		Schematic diagram = new Schematic("Shields");
 		EnergyNode dmgStrength = new GameStateEnergyOutputNode(Color.FIREBRICK, IconManager.getDamageStrengthIcon(), new DamageStrengthGetter(player));
 		EnergyNode dmgType = new GameStateEnergyOutputNode(Color.GOLDENROD, IconManager.getDamageTypeIcon(), new DamageTypeGetter(player));
 		EnergyNode heatLevel = new GameStateEnergyOutputNode(Color.RED, IconManager.getHeatIcon(), new HeatGetter(player));
@@ -329,10 +338,18 @@ public class MainGameScreen implements Screen {
 
 	@Override
 	public void hide() {
+		mainTheme.stop();
+		mainTheme.dispose();
+		entryTheme.stop();
+		entryTheme.dispose();
 	}
 
 	@Override
 	public void dispose() {
+		mainTheme.stop();
+		mainTheme.dispose();
+		entryTheme.stop();
+		entryTheme.dispose();
 	}
 
 }

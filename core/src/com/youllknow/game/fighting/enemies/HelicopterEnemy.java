@@ -3,6 +3,7 @@ package com.youllknow.game.fighting.enemies;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -16,6 +17,7 @@ import com.youllknow.game.fighting.projectiles.behaviors.SingleShotBehavior;
 
 public class HelicopterEnemy implements Component {
 	private static TextureRegion sprite;
+	private static Sound fire;
 	private static final int WIDTH = 32;
 	private static final float COOLDOWN = 0.35f;
 	private float sinceLastShot = -1;
@@ -31,7 +33,7 @@ public class HelicopterEnemy implements Component {
 		DamageType damageType = DamageType.PROJECTILE;
 		int damageStrength = 2;
 		helicopter.add(new ProjectileWeapon(helicopter, 800, new SingleShotBehavior(damageType, damageStrength), new PlayerOnlyTargetBehaviors(),
-				damageType.color, DamageStrength.color(damageStrength)));
+				fire, damageType.color, DamageStrength.color(damageStrength)));
 		helicopter.add(new HealthComponent(10, new ExplosionDeathBehavior()));
 		helicopter.add(new SimpleSpriteRenderer(sprite));
 		engine.addEntity(helicopter);
@@ -49,5 +51,8 @@ public class HelicopterEnemy implements Component {
 	}
 	public static void setSprite(TextureRegion sprite) {
 		HelicopterEnemy.sprite = sprite;
+	}
+	public static void setFireSound(Sound sound) {
+		HelicopterEnemy.fire = sound;
 	}
 }

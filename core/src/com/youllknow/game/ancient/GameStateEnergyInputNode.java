@@ -1,5 +1,6 @@
 package com.youllknow.game.ancient;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.youllknow.game.wiring.Schematic.Wire;
@@ -8,6 +9,7 @@ import com.youllknow.game.wiring.nodes.RegisteredEnergyNode;
 public class GameStateEnergyInputNode extends RegisteredEnergyNode {
 	public static interface GameStateSetter {
 		public void handleInput(Wire wire, Energy energy);
+		public boolean needsAttention();
 		public String getDescription();
 	}
 	private final Color color;
@@ -39,6 +41,8 @@ public class GameStateEnergyInputNode extends RegisteredEnergyNode {
 	}
 	@Override
 	public Color getColor() {
+		if (gameState.needsAttention() && (System.currentTimeMillis() / 333) % 2 == 0)
+			return new Color(Color.WHITE).sub(color).add(0, 0, 0, 1);
 		return color;
 	}
 	@Override

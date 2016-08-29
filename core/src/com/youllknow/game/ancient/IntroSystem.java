@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.youllknow.game.MainGameScreen;
 import com.youllknow.game.fighting.WorldDenizen;
+import com.youllknow.game.fighting.player.PlayerComponent;
 import com.youllknow.game.utils.TooltipManager;
 
 public class IntroSystem extends EntitySystem {
@@ -25,6 +26,8 @@ public class IntroSystem extends EntitySystem {
 		this.continueMusic = continueMusic;
 		this.title = tooltip;
 		this.uiShapes = uiShapes;
+		if (progress > FIN)
+			player.getComponent(PlayerComponent.class).screenLeft += 50 * 60;
 	}
 	private static float progress = 0;
 	private final float FADE_IN = 2f;
@@ -54,7 +57,7 @@ public class IntroSystem extends EntitySystem {
 		} else if (progress < EXPLAIN_WEAPONS) {
 			title.tooltip = "The navigation systems were still intact (WASD to move)";
 		} else if (progress < EXPLAIN_SCHEMATICS) {
-			title.tooltip = "The weapons still devestating (left-click to fire phasers)";
+			title.tooltip = "The weapons still devestating (left-click to fire phasers; Q to change weapon settings)";
 		} else {
 			String tooltipBase = "Its workings, mysterious (click on schematics to alter logic)";
 			if (title.tooltip != null && (!title.tooltip.startsWith(tooltipBase)))
@@ -67,9 +70,9 @@ public class IntroSystem extends EntitySystem {
 		if (progress < EXPLAIN_WEAPONS) {
 			drawFade();
 		}
-		if (progress < FIN) {
+		if (progress < EXPLAIN_SCHEMATICS + 5) {
 			hideUi();
-		} else {
+		} else if (progress >= FIN) {
 			getEngine().removeSystem(this);
 		}
 		Gdx.gl.glDisable(GL20.GL_BLEND);
@@ -103,7 +106,7 @@ public class IntroSystem extends EntitySystem {
 		float remainderHeight = MainGameScreen.LOWER_UI_HEIGHT - bottom;
 		uiShapes.begin(ShapeType.Filled);
 		uiShapes.rect(0, bottom, MainGameScreen.SCREEN_WIDTH, remainderHeight, 
-				centerColor, outerColor, outerColor, centerColor);
+				centerColor, centerColor, outerColor, outerColor);
 		uiShapes.rect(0, 0, MainGameScreen.SCREEN_WIDTH, bottom, 
 				outerColor, outerColor, outerColor, outerColor);
 		uiShapes.end();

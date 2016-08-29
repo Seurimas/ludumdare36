@@ -80,6 +80,8 @@ public class PlayerComponent implements Component, DenizenRendererComponent {
 	}
 	private final float SHIELD_TRIGGER = 0.125f;
 	public boolean triggerShield() {
+		if (heatLevel >= 0.95f)
+			return false;
 		if (shieldProgress > SHIELD_INTERVAL) {
 			shieldProgress = 0;
 			return true;

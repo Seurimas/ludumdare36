@@ -3,6 +3,7 @@ package com.youllknow.game.fighting.projectiles;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -18,14 +19,16 @@ public class ProjectileWeapon implements Component {
 	private final float speed;
 	public final Vector2 source = new Vector2();
 	private final Entity owner;
+	private final Sound sound;
 	private final Projectile.HitBehavior behavior;
 	private final TargetBehaviorFactory targetFactory;
 	private final ProjectileRendererComponent renderer;
 	public ProjectileWeapon(Entity owner, float speed, Projectile.HitBehavior projectileBehavior,
-			TargetBehaviorFactory targetFactory, Color shell, Color payload) {
+			TargetBehaviorFactory targetFactory, Sound sound, Color shell, Color payload) {
 		this.owner = owner;
 		this.speed = speed;
 		this.behavior = projectileBehavior;
+		this.sound = sound;
 		this.targetFactory = targetFactory;
 		this.renderer = new ColorCodedProjectileRenderer(shell, payload);
 	}
@@ -37,6 +40,7 @@ public class ProjectileWeapon implements Component {
 		dummy.add(new Projectile(owner, source, temp, behavior, targetFactory.getBehavior(owner)));
 		dummy.add(renderer);
 		engine.addEntity(dummy);
+		sound.play();
 	}
 
 }

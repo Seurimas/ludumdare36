@@ -49,5 +49,18 @@ public class PlayerWeaponSetter extends PlayerStatSetter {
 			return "???";
 		}
 	}
-
+	@Override
+	public boolean needsAttention() {
+		PlayerWeapon weapon = player.getComponent(PlayerWeapon.class);
+		switch (statType) {
+		case DRAIN_SHIELD:
+			return weapon.drainEnergy.equals(Energy.RED);
+		case FIRE_CHARGE:
+			return weapon.fireChargeEnergy.equals(Energy.GREEN);
+		case SHUT_OFF:
+			return weapon.shutOffEnergy.equals(Energy.RED);
+		default:
+			return false;
+		}
+	}
 }
