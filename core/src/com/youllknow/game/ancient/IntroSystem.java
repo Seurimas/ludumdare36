@@ -38,7 +38,7 @@ public class IntroSystem extends EntitySystem {
 	private final float FIN = 60f; 
 	@Override
 	public void update(float deltaTime) {
-		if (progress < 30f && !music.isPlaying()) {
+		if (progress < 20 && !music.isPlaying()) {
 			music.stop();
 			music.play();
 			music.setPosition(0);
@@ -106,7 +106,7 @@ public class IntroSystem extends EntitySystem {
 		float remainderHeight = MainGameScreen.LOWER_UI_HEIGHT - bottom;
 		uiShapes.begin(ShapeType.Filled);
 		uiShapes.rect(0, bottom, MainGameScreen.SCREEN_WIDTH, remainderHeight, 
-				centerColor, centerColor, outerColor, outerColor);
+				outerColor, outerColor, centerColor, centerColor);
 		uiShapes.rect(0, 0, MainGameScreen.SCREEN_WIDTH, bottom, 
 				outerColor, outerColor, outerColor, outerColor);
 		uiShapes.end();

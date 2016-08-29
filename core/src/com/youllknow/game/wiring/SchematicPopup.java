@@ -105,7 +105,6 @@ public class SchematicPopup implements Component {
 		temp.add(bounds.x, bounds.y);
 	}
 	public EnergyNode findNode(float mouseX, float mouseY) {
-		System.out.println(String.format("%f, %f", mouseX, mouseY));
 		for (EnergyNode node : baseDiagram.getNodes()) {
 			temp3.set(baseDiagram.getLocation(node));
 			scaleToBounds(temp3);
