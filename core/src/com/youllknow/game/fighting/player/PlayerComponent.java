@@ -13,7 +13,7 @@ import com.youllknow.game.wiring.Schematic.EnergyNode.Energy;
 
 public class PlayerComponent implements Component, DenizenRendererComponent {
 	private static final float SHIELD_INTERVAL = 0.6f;
-	private static final float HEAT_SINK = 0.01f;
+	private static final float HEAT_SINK = 0.025f;
 	private static final float VERTICAL_FRAMES_IN_SHEET = 4f;
 	private static final float HORIZONTAL_FRAMES = 4f;
 	static {

@@ -57,9 +57,9 @@ public class PlayerWeapon implements Component {
 			shutOffSound.play();
 			return;
 		} else if (shutOffEnergy.equals(Energy.BLUE)) {
-			playerComponent.heatUp(0.0025f);
+			playerComponent.heatUp(0.0075f);
 		} else if (shutOffEnergy.equals(Energy.GREEN)) {
-			playerComponent.heatUp(0.005f);
+			playerComponent.heatUp(0.015f);
 		}
 		float extraStrength = 0;
 		if (drainEnergy.equals(Energy.BLUE)) {
