@@ -3,6 +3,7 @@ package com.youllknow.game.ancient;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.youllknow.game.utils.GwtUtils;
 import com.youllknow.game.wiring.Schematic.Wire;
 import com.youllknow.game.wiring.nodes.RegisteredEnergyNode;
 
@@ -47,7 +48,7 @@ public class GameStateEnergyInputNode extends RegisteredEnergyNode {
 	}
 	@Override
 	public String getTooltip() {
-		return String.format("When this node receives energy, the following occurs: %s", 
+		return GwtUtils.format("When this node receives energy, the following occurs: %s", 
 				gameState.getDescription());
 	}
 

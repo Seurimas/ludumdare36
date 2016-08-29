@@ -3,6 +3,7 @@ package com.youllknow.game.wiring.nodes;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.youllknow.game.IconManager;
+import com.youllknow.game.utils.GwtUtils;
 import com.youllknow.game.wiring.Schematic;
 import com.youllknow.game.wiring.Schematic.EnergyNode;
 import com.youllknow.game.wiring.Schematic.EnergyNode.Energy;
@@ -57,7 +58,7 @@ public class LogicEnergyNode extends RegisteredEnergyNode {
 		}
 		@Override
 		public String getTooltip() {
-			return String.format(oddFormat, "Blue", "Green");
+			return GwtUtils.format(oddFormat, "Blue", "Green");
 		}
 	};
 	public static final Logic oddRed = new Logic() {
@@ -76,7 +77,7 @@ public class LogicEnergyNode extends RegisteredEnergyNode {
 		}
 		@Override
 		public String getTooltip() {
-			return String.format(oddFormat, "Red", "Blue");
+			return GwtUtils.format(oddFormat, "Red", "Blue");
 		}
 	};
 	public static final Logic oddGreen = new Logic() {
@@ -95,7 +96,7 @@ public class LogicEnergyNode extends RegisteredEnergyNode {
 		}
 		@Override
 		public String getTooltip() {
-			return String.format(oddFormat, "Green", "Red");
+			return GwtUtils.format(oddFormat, "Green", "Red");
 		}
 	};
 	private static final String anyFormat = "Output %s if input at all. Otherwise, output %s.";
@@ -115,7 +116,7 @@ public class LogicEnergyNode extends RegisteredEnergyNode {
 		}
 		@Override
 		public String getTooltip() {
-			return String.format(anyFormat, "Red", "Blue");
+			return GwtUtils.format(anyFormat, "Red", "Blue");
 		}
 	};
 	public static final Logic anyGreen = new Logic() {
@@ -134,7 +135,7 @@ public class LogicEnergyNode extends RegisteredEnergyNode {
 		}
 		@Override
 		public String getTooltip() {
-			return String.format(anyFormat, "Green", "Red");
+			return GwtUtils.format(anyFormat, "Green", "Red");
 		}
 	};
 	public static final Logic anyBlue = new Logic() {
@@ -153,7 +154,7 @@ public class LogicEnergyNode extends RegisteredEnergyNode {
 		}
 		@Override
 		public String getTooltip() {
-			return String.format(anyFormat, "Blue", "Green");
+			return GwtUtils.format(anyFormat, "Blue", "Green");
 		}
 	};
 	private static final Logic[] logics = new Logic[] {
@@ -203,6 +204,6 @@ public class LogicEnergyNode extends RegisteredEnergyNode {
 	}
 	@Override
 	public String getTooltip() {
-		return String.format("This is a logic node. It's output is based on the inputs: %s", logic.getTooltip());
+		return GwtUtils.format("This is a logic node. It's output is based on the inputs: %s", logic.getTooltip());
 	}
 }

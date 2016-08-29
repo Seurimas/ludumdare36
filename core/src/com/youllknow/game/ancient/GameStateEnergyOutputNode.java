@@ -2,6 +2,7 @@ package com.youllknow.game.ancient;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.youllknow.game.utils.GwtUtils;
 import com.youllknow.game.wiring.Schematic.Wire;
 import com.youllknow.game.wiring.nodes.RegisteredEnergyNode;
 
@@ -42,7 +43,7 @@ public class GameStateEnergyOutputNode extends RegisteredEnergyNode {
 	}
 	@Override
 	public String getTooltip() {
-		return String.format("This node outputs energy as follows: %s", gameState.getDescription());
+		return GwtUtils.format("This node outputs energy as follows: %s", gameState.getDescription());
 	}
 
 }

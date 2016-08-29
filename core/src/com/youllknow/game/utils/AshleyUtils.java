@@ -37,6 +37,10 @@ public class AshleyUtils {
 					public T next() {
 						return baseIterator.next().getComponent(componentClass);
 					}
+					@Override
+					public void remove() {
+						baseIterator.remove();
+					}
 				};
 			}
 		};

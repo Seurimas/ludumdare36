@@ -75,7 +75,7 @@ public class SchematicPopup implements Component {
 			}
 		}
 		font.setColor(Color.GOLD);
-		font.draw(uiBatch, baseDiagram.name, bounds.x, bounds.y + bounds.height);
+		font.draw(uiBatch, baseDiagram.name, bounds.x, bounds.y + bounds.height + 20);
 		uiBatch.end();
 	}
 	private void renderEnergyWire(ShapeRenderer uiShapes, float flowPlace, Wire wire, Energy energy) {
